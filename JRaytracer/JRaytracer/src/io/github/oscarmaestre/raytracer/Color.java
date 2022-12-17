@@ -9,11 +9,11 @@ package io.github.oscarmaestre.raytracer;
  * @author usuario
  */
 public class Color extends Vec3 {
-    
+
     public Color(double d1, double d2, double d3) {
         super(d1, d2, d3);
     }
-   
+    
     public String toString(){
         /* En formato PPM hay que mostrar los valores entre 0 y 255*/
         int r=(int) (this.getV1()*255.999);

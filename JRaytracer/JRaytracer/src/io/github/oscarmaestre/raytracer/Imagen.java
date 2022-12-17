@@ -38,9 +38,9 @@ public class Imagen {
         Imagen imagen=new Imagen(256, 256);
         for (int cy=ALTO-1; cy>=0; --cy){
             for (int cx=0; cx<ALTO; cx++){
-                double r=cx/(ANCHO-1);
-                double g=cy/(ALTO-1);
-                double b=0.25;
+                double r=(double)cx/(ANCHO-1);
+                double g=(double)cy/(ALTO-1);
+                double b=(double)0.25;
                 imagen.setColor(cx, cy, r, g, b);
             }
         }
