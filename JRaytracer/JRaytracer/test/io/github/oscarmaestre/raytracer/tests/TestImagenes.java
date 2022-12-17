@@ -16,9 +16,15 @@ public class TestImagenes {
     }
 
     @Test
-    public void hello() throws FileNotFoundException {
+    public void imagen1() throws FileNotFoundException {
         Imagen i=Imagen.getPrimeraImagen();
         i.guardarImagenComoPPM("primera_imagen.ppm");
+    }
+    
+    @Test
+    public void imagen2() throws FileNotFoundException {
+        Imagen i=Imagen.getSegundaImagen();
+        i.guardarImagenComoPPM("segunda_imagen.ppm");
     }
 
 }

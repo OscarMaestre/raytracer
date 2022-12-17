@@ -24,4 +24,11 @@ public class Color extends Vec3 {
         String cadena=String.format("%d %d %d", r, g, b);
         return cadena;
     }
+    
+    public static Color from(Vec3 v){
+        double d1 = v.getV1();
+        double d2 = v.getV2();
+        double d3 = v.getV3();
+        return new Color(d1, d2, d3);
+    }
 }
