@@ -1,0 +1,9 @@
+Esferas
+=============
+
+Ecuación de la esfera
+--------------------------------------------------------------------------------
+
+Para una esfera de radio *R* situada en el origen *(0,0,0)* se sabe que un punto cualquiera *(x,y,z)* está en la esfera si x^2 + y^2 + z^2 < R^2. Si la esfera está en cualquier otro punto del espacio *(cx, cy, cz)* necesitaremos "moverla" al punto *(0,0,0)* y entonces la ecuación será *(x-cx)^2 + (y-cy)^2 + (z-cz)^2 < R^2*.
+
+Como disponemos de código para trabajar con vectores podemos decir que si queremos comprobar si un punto *P* está dentro de una esfera de radio *R* y con centro en *C* podemos decir que *P* estará dentro si *(P-C)^2 < R^2* 

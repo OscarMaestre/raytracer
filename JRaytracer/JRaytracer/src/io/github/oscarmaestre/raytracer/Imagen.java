@@ -152,6 +152,73 @@ public class Imagen {
         return imagenResultado;
     }
     
+    private static boolean golpeaEsferaRoja(Esfera esfera,  Rayo r){
+        PuntoAlcanzadoPorRayo esAlcanzadaPorRayo;
+        esAlcanzadaPorRayo = esfera.esAlcanzadaPorRayo(r);
+        if (esAlcanzadaPorRayo!=null){
+            return true;
+        }
+        return false;
+    }
+    public static Imagen getTerceraImagen(){
+        final double    ASPECT_RATIO= 16.0/9.0;
+        final int       ANCHO       = 800;
+        final int       ALTO        = (int) (ANCHO / ASPECT_RATIO);
+        Imagen          imagenResultado;
+        final double    distancia_focal = 1.0;
+        final Punto3D   origen          = new Punto3D(0.0, 0.0, 0.0);
+        
+        final Vec3      vHorizontal;
+        final Vec3      vVertical;
+        vHorizontal  =      new Vec3(ANCHO, 0.0, 0.0);
+        vVertical    =      new Vec3(0.0, ALTO, 0.0);
+        
+        Punto3D esqInfIzq = 
+                Imagen.calcularEsqInfIzq(origen, 
+                        vHorizontal, 
+                        vVertical, 
+                        distancia_focal);
+        
+        System.out.println("La esq inf izq está en :"+esqInfIzq.toString());
+        imagenResultado=new Imagen(ANCHO, ALTO);
+        /* La esfera está justo en el centro de nuestra pantalla,
+        a una unidad de distancia del centro de la pantalla */
+        Punto3D centroEsfera=new Punto3D(0.0, 0.0, -10.0);
+        Esfera esfera=new Esfera(centroEsfera, 0.5);
+        /*Esto se puede optimizar bastante, por ejemplo
+        sacando algunas cosas del bucle interior*/
+        for (int cy=0; cy<ALTO; cy++){
+            for (int cx=0; cx<ANCHO; cx++){
+                double escalaX=(double)cx/(ANCHO-1);
+                double escalaY=(double)cy/(ALTO-1);
+                Vec3 desplazamientoX = 
+                        Vec3.multiplicarVectorPorEscalar(
+                                vHorizontal, escalaX);
+                Vec3 desplazamientoY = 
+                        Vec3.multiplicarVectorPorEscalar(
+                                vVertical, escalaY);
+                Vec3 desplazamientoZ=origen.getCopia();
+                /* Z se invierte porque el Z positivo está
+                "alejándonos de la pantalla */
+                desplazamientoZ.cambiarSigno();
+                Vec3 direccion = Vec3.sumarVectores(esqInfIzq, 
+                        desplazamientoX,
+                        desplazamientoY,
+                        desplazamientoZ);
+                Rayo r=new Rayo(origen, direccion);
+                Color colorEnPunto;
+                if (golpeaEsferaRoja(esfera, r)){
+                    colorEnPunto = Imagen.calcularColorRayoEnSegundaImagen(r);
+                }
+                else {
+                    colorEnPunto=Color.getRojo();
+                }
+                imagenResultado.setColor(cx, cy, colorEnPunto);
+            }
+        }
+        return imagenResultado;
+    }
+    
     public String getImagenComoPPM(){
         StringBuilder resultado=new StringBuilder();
         

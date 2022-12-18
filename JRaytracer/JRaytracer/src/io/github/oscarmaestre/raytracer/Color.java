@@ -14,6 +14,17 @@ public class Color extends Vec3 {
         super(d1, d2, d3);
     }
     
+    public static Color getRojo(){
+        return new Color(1.0, 0.0, 0.0);
+    }
+    public static Color getVerde(){
+        return new Color(0.0, 1.0, 1.0);
+    }
+    
+    public static Color getAzul(){
+        return new Color(0.0, 0.0, 1.0);
+    }
+    
     public String toString(){
         /* En formato PPM hay que mostrar los valores entre 0 y 255*/
         int r=(int) (this.getV1()*255.999);

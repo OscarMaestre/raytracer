@@ -49,7 +49,6 @@ public class Vec3 {
     }
     
     public Vec3 getCopia(){
-        Vec3 copia;
         double v1 = this.getV1();
         double v2 = this.getV2();
         double v3 = this.getV3();
@@ -88,14 +87,14 @@ public class Vec3 {
     public static Vec3 restarVectores(Vec3 v1, Vec3 v2){
         double resultado1=v1.getV1()-v2.getV1();
         double resultado2=v1.getV2()-v2.getV2();
-        double resultado3=v1.getV3()-v2.getV2();
+        double resultado3=v1.getV3()-v2.getV3();
         return new Vec3(resultado1,resultado2,resultado3);
     }
     
     public static Vec3 multiplicarVectores(Vec3 v1, Vec3 v2){
         double resultado1=v1.getV1()*v2.getV1();
         double resultado2=v1.getV2()*v2.getV2();
-        double resultado3=v1.getV3()*v2.getV2();
+        double resultado3=v1.getV3()*v2.getV3();
         return new Vec3(resultado1,resultado2,resultado3);
     }
     
@@ -115,8 +114,8 @@ public class Vec3 {
     public static double productoEscalar(Vec3 v1, Vec3 v2){
         double resultado1=v1.getV1()*v2.getV1();
         double resultado2=v1.getV2()*v2.getV2();
-        double resultado3=v1.getV3()*v2.getV2();
-        double suma=resultado1+resultado3+resultado3;
+        double resultado3=v1.getV3()*v2.getV3();
+        double suma=resultado1+resultado2+resultado3;
         return suma;
     }
     

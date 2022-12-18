@@ -33,6 +33,13 @@ public class TestVec3 {
         Assert.assertEquals(v1, 4.0, 0.005);
     }
 
+    @Test 
+    public void testProductoEscalar(){
+        Vec3 v1=new Vec3 (1.0, 0.0, 0.0);
+        Vec3 v2=new Vec3 (0.0, 1.0, 0.0);
+        double productoEscalar = Vec3.productoEscalar(v1, v2);
+        Assert.assertEquals(0.0,productoEscalar , 0.001);
+    }
     @Test
     public void testVectorUnitario(){
         Vec3 v1=new Vec3(2, 3, 4);

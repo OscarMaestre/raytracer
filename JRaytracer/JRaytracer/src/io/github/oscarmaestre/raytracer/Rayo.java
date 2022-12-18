@@ -9,8 +9,8 @@ package io.github.oscarmaestre.raytracer;
  * @author usuario
  */
 public class Rayo {
-    Punto3D origen;
-    Vec3    direccion;
+    private Punto3D origen;
+    private Vec3    direccion;
 
     public Rayo(Punto3D origen, Vec3 direccion) {
         this.origen = origen.getCopia();
