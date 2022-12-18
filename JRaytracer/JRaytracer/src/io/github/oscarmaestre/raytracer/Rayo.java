@@ -17,9 +17,11 @@ public class Rayo {
         this.direccion = direccion.getCopia();
     }
     public Punto3D getPosicion(double t){
-        /* Pequeño hack: Vec3 y Punto3D son casi iguales*/
         Vec3 incremento=Vec3.multiplicarVectorPorEscalar(direccion, t);
-        Vec3 posFinal = Vec3.sumarVectores(this.origen, direccion);
+        /* Pequeño hack: Vec3 y Punto3D son casi iguales, así que
+        posFinal puede ser Vec3*/
+        Vec3 posFinal = Vec3.sumarVectores(this.origen, incremento);
+        /* Pero por supuesto, devolvemos el tipo correcto*/
         return Punto3D.fromVec3(posFinal);
     }
 

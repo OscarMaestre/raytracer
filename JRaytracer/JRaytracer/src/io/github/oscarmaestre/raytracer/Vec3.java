@@ -1,9 +1,5 @@
 package io.github.oscarmaestre.raytracer;
 
-/**
- *
- * @author usuario
- */
 public class Vec3 {
     
     double valores[];

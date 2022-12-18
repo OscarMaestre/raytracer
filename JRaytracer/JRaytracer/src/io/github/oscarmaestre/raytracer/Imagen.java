@@ -10,14 +10,22 @@ public class Imagen {
 
     Color pixeles[][];
 
-    public Imagen(int alto, int ancho) {
+    public Imagen(int ancho, int alto) {
         this.alto = alto;
         this.ancho = ancho;
-        /* Almacenamos los colores de cada pixel en formato (x,y)*/
-        this.pixeles=new Color[this.ancho][this.alto];
+        /* Almacenamos los colores de cada pixel 
+        en formato (y,x). Esto ocurre porque luego hay
+        que recorrer fila por fila y empezaremos
+        recorriendo todas las X en la fila y=0*/
+        this.pixeles=new Color[this.alto][this.ancho];
     }
     public void setColor(int x, int y, Color c){
-        this.pixeles[x][y]=c;
+        /* Hacemos alto-1-y para que el origen de coordenadas
+        esté en la esquina inferior izquierda. Esto
+        concuerda más con el uso diario que hacemos de los ejes.
+        Los ejes en gráficos por ordenador suelen tener el origen
+        en la esquina superior izquierda de la imagen  */
+        this.pixeles[alto-1-y][x]=c;
     }
     public void setColor(int x, int y, double v1, double v2, double v3){
         Color c=new Color(v1, v2, v3);
@@ -34,13 +42,13 @@ public class Imagen {
         final int ANCHO =256;
         final int ALTO  =256;
         
-        Imagen imagen=new Imagen(256, 256);
-        for (int cy=ALTO-1; cy>=0; --cy){
-            for (int cx=0; cx<ALTO; cx++){
-                double r=(double)cx/(ANCHO-1);
-                double g=(double)cy/(ALTO-1);
+        Imagen imagen=new Imagen(ANCHO, ALTO);
+        for (int coorY=0; coorY<ALTO; coorY++){
+            for (int coorX=0; coorX<ANCHO; coorX++){
+                double r=(double)coorX/(ANCHO-1);
+                double g=(double)coorY/(ALTO-1);
                 double b=(double)0.25;
-                imagen.setColor(cx, cy, r, g, b);
+                imagen.setColor(coorX, coorY, r, g, b);
             }
         }
         return imagen;
@@ -98,7 +106,7 @@ public class Imagen {
     public static Imagen getSegundaImagen(){
         final double    ASPECT_RATIO= 16.0/9.0;
         final int       ANCHO       = 400;
-        final int       ALTO        = (int) (ANCHO * ASPECT_RATIO);
+        final int       ALTO        = (int) (ANCHO / ASPECT_RATIO);
         Imagen          imagenResultado;
         final double    distancia_focal = 1.0;
         final Punto3D   origen          = new Punto3D(0.0, 0.0, 0.0);
@@ -114,10 +122,11 @@ public class Imagen {
                         vVertical, 
                         distancia_focal);
         
-        imagenResultado=new Imagen(ALTO, ANCHO);
+        System.out.println("La esq inf izq está en :"+esqInfIzq.toString());
+        imagenResultado=new Imagen(ANCHO, ALTO);
         /*Esto se puede optimizar bastante, por ejemplo
         sacando algunas cosas del bucle interior*/
-        for (int cy=ALTO-1; cy>=0; --cy){
+        for (int cy=0; cy<ALTO; cy++){
             for (int cx=0; cx<ANCHO; cx++){
                 double escalaX=(double)cx/(ANCHO-1);
                 double escalaY=(double)cy/(ALTO-1);
@@ -147,16 +156,16 @@ public class Imagen {
         StringBuilder resultado=new StringBuilder();
         
         resultado.append("P3\n");
-        /* En el formato PPM aparece primero la altura y
-        luego la anchura */
-        resultado.append(this.alto + " " + this.ancho+"\n");
+        /* En el formato PPM aparece primero la anchura y
+        luego la altura */
+        resultado.append(this.ancho + " " + this.alto+"\n");
         resultado.append("255\n");
         final int ANCHO=this.getAncho();
         final int ALTO =this.getAlto();
-        for (int coordenadaX=0; coordenadaX<ANCHO; coordenadaX++){
-            for (int coordenadaY=0; coordenadaY<ALTO; coordenadaY++){
+        for (int coorY=0; coorY<ALTO; coorY++){
+            for (int coorX=0; coorX<ANCHO; coorX++){
                 Color colorEnPixel;
-                colorEnPixel=this.pixeles[coordenadaX][coordenadaY];
+                colorEnPixel=this.pixeles[coorY][coorX];
                 resultado.append(colorEnPixel.toString());
                 resultado.append("\n");
             }
