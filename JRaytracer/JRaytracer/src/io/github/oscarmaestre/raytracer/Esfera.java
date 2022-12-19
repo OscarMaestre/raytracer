@@ -42,7 +42,7 @@ public class Esfera extends ObjetoRenderizable {
                 a_menos_c, rayo.getDireccion()));
         double c=Vec3.productoEscalar(a_menos_c, a_menos_c) - 
                 (this.radio * this.radio);
-        double discriminante = (b*b)-(4*a*c);
+        double discriminante = (double) (b*b)-(4.0*a*c);
         if (discriminante>0){
             puntoAlcance=new PuntoAlcanzadoPorRayo(centro, a_menos_c, 1.0, true);
         } 

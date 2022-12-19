@@ -34,6 +34,70 @@ public class TestVec3 {
     }
 
     @Test 
+    public void restaVectores() {
+        Vec3 vector1=new Vec3(1.0, 1.0, 1.0);
+        Vec3 resta = Vec3.restarVectores(vector1, vector1);
+        double v1 = resta.getV1();
+        double v2 = resta.getV2();
+        double v3 = resta.getV3();
+        Assert.assertEquals(v1, 0.0, 0.005);
+        Assert.assertEquals(v2, 0.0, 0.005);
+        Assert.assertEquals(v3, 0.0, 0.005);   
+        
+    }
+    
+    @Test
+    public void tesMultiplicarVec3porEscalar(){
+        Vec3 vector=new Vec3 (1.0, 2.0, 3.0);
+        double escalar=2.0;
+        vector.multiplicarPorEscalar(escalar);
+        double v1 = vector.getV1();
+        double v2 = vector.getV2();
+        double v3 = vector.getV3();
+        Assert.assertEquals(v1, 2.0, 0.005);
+        Assert.assertEquals(v2, 4.0, 0.005);
+        Assert.assertEquals(v3, 6.0, 0.005);   
+    }
+    
+    
+    @Test
+    public void testDividirEstaticoVec3porEscalar(){
+        Vec3 vector=new Vec3 (1.0, 2.0, 3.0);
+        double escalar=2.0;
+        Vec3 resultado = Vec3.dividirVectorPorEscalar(vector, escalar);
+        double d1=resultado.getV1();
+        double d2=resultado.getV2();
+        double d3=resultado.getV3();
+        Assert.assertEquals(d1, 0.5, 0.05);
+        Assert.assertEquals(d2, 1.0, 0.05);
+        Assert.assertEquals(d3, 1.5, 0.05);
+    }
+    @Test
+    public void tesMultiplicarEstaticoVec3porEscalar(){
+        Vec3 vector=new Vec3 (1.0, 2.0, 3.0);
+        double escalar=2.0;
+        Vec3 resultado = Vec3.multiplicarVectorPorEscalar(vector, escalar);
+        
+        double v1 = resultado.getV1();
+        double v2 = resultado.getV2();
+        double v3 = resultado.getV3();
+        //Assert.assertEquals(v1, 2.0, 0.005);
+        Assert.assertEquals(v2, 4.0, 0.005);
+        Assert.assertEquals(v3, 6.0, 0.005);   
+    }
+    
+    @Test
+    public void testVectorUnidad(){
+        double longitud;
+        Vec3 vector=new Vec3 (1.0, 2.0, 3.0);
+        longitud=vector.getLongitud();
+        Assert.assertEquals(longitud, 3.74,0.005);
+        Vec3 vectorUnitario = Vec3.vectorUnitario(vector);
+        longitud = vectorUnitario.getLongitud();
+        Assert.assertEquals(longitud, 1,0.005);
+    }
+    
+    @Test 
     public void testProductoEscalar(){
         Vec3 v1=new Vec3 (1.0, 0.0, 0.0);
         Vec3 v2=new Vec3 (0.0, 1.0, 0.0);

@@ -99,10 +99,14 @@ public class Vec3 {
     }
     
     public static Vec3 multiplicarVectorPorEscalar(Vec3 v, double t){
+//        System.out.println("Multiplicando vector:"+v.toString());
+//        System.out.println("Multiplicando por:"+t);
         double resultado1=v.getV1()*t;
         double resultado2=v.getV2()*t;
         double resultado3=v.getV3()*t;
-        return new Vec3(resultado1,resultado2,resultado3);
+        Vec3 resultado=new Vec3(resultado1,resultado2,resultado3);
+//        System.out.println("Obtenemos: "+resultado.toString());
+        return resultado;
     }
     
     public static Vec3 dividirVectorPorEscalar(Vec3 v, double t){
@@ -111,6 +115,7 @@ public class Vec3 {
         return resultado;
     }
     
+
     public static double productoEscalar(Vec3 v1, Vec3 v2){
         double resultado1=v1.getV1()*v2.getV1();
         double resultado2=v1.getV2()*v2.getV2();

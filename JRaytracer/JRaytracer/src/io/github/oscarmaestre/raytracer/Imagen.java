@@ -65,6 +65,10 @@ public class Imagen {
         Vec3 semiHorizontal = 
                 Vec3.dividirVectorPorEscalar(vHorizontal, 2);
         Vec3 profundidad = new Vec3(0, 0, distanciaFocal);
+        System.out.println("La semihorizontal es:"+semiHorizontal.toString());
+        System.out.println("La semivertical es:"+semiVertical.toString());
+        System.out.println("La profundidad es:"+profundidad.toString());
+        
         /* Y ahora al origen le restamos la semihorizontal,
         la semivertical y toda la profundidad (lo que hace 
         "retroceder" desde la pantalla*/
@@ -145,6 +149,7 @@ public class Imagen {
                         desplazamientoY,
                         desplazamientoZ);
                 Rayo r=new Rayo(origen, direccion);
+                System.out.println(r);
                 Color colorEnPunto = Imagen.calcularColorRayoEnSegundaImagen(r);
                 imagenResultado.setColor(cx, cy, colorEnPunto);
             }
@@ -162,7 +167,7 @@ public class Imagen {
     }
     public static Imagen getTerceraImagen(){
         final double    ASPECT_RATIO= 16.0/9.0;
-        final int       ANCHO       = 800;
+        final int       ANCHO       = 400;
         final int       ALTO        = (int) (ANCHO / ASPECT_RATIO);
         Imagen          imagenResultado;
         final double    distancia_focal = 1.0;
@@ -183,7 +188,7 @@ public class Imagen {
         imagenResultado=new Imagen(ANCHO, ALTO);
         /* La esfera está justo en el centro de nuestra pantalla,
         a una unidad de distancia del centro de la pantalla */
-        Punto3D centroEsfera=new Punto3D(0.0, 0.0, -10.0);
+        Punto3D centroEsfera=new Punto3D(0.0, 0.0, -1.0);
         Esfera esfera=new Esfera(centroEsfera, 0.5);
         /*Esto se puede optimizar bastante, por ejemplo
         sacando algunas cosas del bucle interior*/
@@ -208,10 +213,10 @@ public class Imagen {
                 Rayo r=new Rayo(origen, direccion);
                 Color colorEnPunto;
                 if (golpeaEsferaRoja(esfera, r)){
-                    colorEnPunto = Imagen.calcularColorRayoEnSegundaImagen(r);
+                    colorEnPunto=Color.getRojo();
                 }
                 else {
-                    colorEnPunto=Color.getRojo();
+                    colorEnPunto = Imagen.calcularColorRayoEnSegundaImagen(r);
                 }
                 imagenResultado.setColor(cx, cy, colorEnPunto);
             }

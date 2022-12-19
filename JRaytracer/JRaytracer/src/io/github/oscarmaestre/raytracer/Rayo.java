@@ -32,6 +32,13 @@ public class Rayo {
     public Vec3 getDireccion() {
         return direccion;
     }
+
+    @Override
+    public String toString() {
+        return "Rayo{" + "origen=" + origen + ", direccion=" + direccion + '}';
+    }
+    
+    
     
     
 }
