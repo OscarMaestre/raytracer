@@ -65,9 +65,9 @@ public class Imagen {
         Vec3 semiHorizontal = 
                 Vec3.dividirVectorPorEscalar(vHorizontal, 2);
         Vec3 profundidad = new Vec3(0, 0, distanciaFocal);
-        System.out.println("La semihorizontal es:"+semiHorizontal.toString());
-        System.out.println("La semivertical es:"+semiVertical.toString());
-        System.out.println("La profundidad es:"+profundidad.toString());
+//        System.out.println("La semihorizontal es:"+semiHorizontal.toString());
+//        System.out.println("La semivertical es:"+semiVertical.toString());
+//        System.out.println("La profundidad es:"+profundidad.toString());
         
         /* Y ahora al origen le restamos la semihorizontal,
         la semivertical y toda la profundidad (lo que hace 
@@ -192,7 +192,7 @@ public class Imagen {
         imagenResultado=new Imagen(ANCHO, ALTO);
         /* La esfera está justo en el centro de nuestra pantalla,
         a una unidad de distancia del centro de la pantalla */
-        Punto3D centroEsfera=new Punto3D(0.0, 0.0, -1.0);
+        Punto3D centroEsfera=new Punto3D(0.0, 0.0, -1);
         Esfera esfera=new Esfera(centroEsfera, 0.5);
         /*Esto se puede optimizar bastante, por ejemplo
         sacando algunas cosas del bucle interior*/

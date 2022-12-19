@@ -4,6 +4,7 @@
  */
 package io.github.oscarmaestre.raytracer.tests;
 
+import io.github.oscarmaestre.raytracer.Ejemplos;
 import io.github.oscarmaestre.raytracer.Imagen;
 import java.io.FileNotFoundException;
 import static org.testng.Assert.*;
@@ -15,6 +16,11 @@ public class TestImagenes {
     public TestImagenes() {
     }
 
+    @Test
+    public void imagenAzul() throws FileNotFoundException {
+        Imagen i=Ejemplos.generarImagenAzul();
+        i.guardarImagenComoPPM("imagen_azul.ppm");
+    }
     @Test
     public void imagen1() throws FileNotFoundException {
         Imagen i=Imagen.getPrimeraImagen();
