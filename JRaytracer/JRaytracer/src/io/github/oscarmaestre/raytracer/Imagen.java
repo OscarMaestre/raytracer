@@ -115,10 +115,12 @@ public class Imagen {
         final double    distancia_focal = 1.0;
         final Punto3D   origen          = new Punto3D(0.0, 0.0, 0.0);
         
+        final double    alturaViewport=2.0;
+        final double    anchuraViewport= ASPECT_RATIO * alturaViewport ;
         final Vec3      vHorizontal;
         final Vec3      vVertical;
-        vHorizontal  =      new Vec3(ANCHO, 0.0, 0.0);
-        vVertical    =      new Vec3(0.0, ALTO, 0.0);
+        vHorizontal  =      new Vec3(anchuraViewport, 0.0, 0.0);
+        vVertical    =      new Vec3(0.0, alturaViewport, 0.0);
         
         Punto3D esqInfIzq = 
                 Imagen.calcularEsqInfIzq(origen, 
@@ -149,7 +151,7 @@ public class Imagen {
                         desplazamientoY,
                         desplazamientoZ);
                 Rayo r=new Rayo(origen, direccion);
-                System.out.println(r);
+                //System.out.println(r);
                 Color colorEnPunto = Imagen.calcularColorRayoEnSegundaImagen(r);
                 imagenResultado.setColor(cx, cy, colorEnPunto);
             }
@@ -173,10 +175,12 @@ public class Imagen {
         final double    distancia_focal = 1.0;
         final Punto3D   origen          = new Punto3D(0.0, 0.0, 0.0);
         
+        final double    alturaViewport=2.0;
+        final double    anchuraViewport= ASPECT_RATIO * alturaViewport ;
         final Vec3      vHorizontal;
         final Vec3      vVertical;
-        vHorizontal  =      new Vec3(ANCHO, 0.0, 0.0);
-        vVertical    =      new Vec3(0.0, ALTO, 0.0);
+        vHorizontal  =      new Vec3(anchuraViewport, 0.0, 0.0);
+        vVertical    =      new Vec3(0.0, alturaViewport, 0.0);
         
         Punto3D esqInfIzq = 
                 Imagen.calcularEsqInfIzq(origen, 
