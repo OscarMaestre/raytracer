@@ -4,6 +4,7 @@
  */
 package io.github.oscarmaestre.raytracer.tests;
 
+import io.github.oscarmaestre.raytracer.Color;
 import io.github.oscarmaestre.raytracer.Ejemplos;
 import io.github.oscarmaestre.raytracer.Imagen;
 import java.io.FileNotFoundException;
@@ -21,6 +22,13 @@ public class TestImagenes {
         Imagen i=Ejemplos.generarImagenAzul();
         i.guardarImagenComoPPM("imagen_azul.ppm");
     }
+    
+    @Test
+    public void imagenGradienteVerde() throws FileNotFoundException {
+        Imagen i=Ejemplos.generarGradiente(new Color(0.0, 1.0, 0.0));
+        i.guardarImagenComoPPM("gradiente_verde.ppm");
+    }
+    
     @Test
     public void imagen1() throws FileNotFoundException {
         Imagen i=Imagen.getPrimeraImagen();
