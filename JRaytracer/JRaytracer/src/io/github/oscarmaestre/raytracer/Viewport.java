@@ -78,7 +78,7 @@ public class Viewport {
                         this.vectorAncho, escalaX);
         Vec3 desplazamientoY = 
                 Vec3.multiplicarVectorPorEscalar(
-                        this.vectorAncho, escalaY);
+                        this.vectorAlto, escalaY);
         Vec3 desplazamientoZ=this.origenRayos.getCopia();
         /* Z se invierte porque el Z positivo está
         "alejándonos de la pantalla */

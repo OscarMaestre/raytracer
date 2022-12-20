@@ -44,8 +44,28 @@ public class Esfera extends ObjetoRenderizable {
                 (this.radio * this.radio);
         double discriminante = (double) (b*b)-(4.0*a*c);
         if (discriminante>0){
-            puntoAlcance=new PuntoAlcanzadoPorRayo(centro, a_menos_c, 1.0, true);
+            double t=(-b-Math.sqrt(discriminante) ) / (2.0*a);
+            Punto3D puntoEsfera = rayo.getPosicion(t);
+            Vec3 vectorNormalEsfera=Vec3.restarVectores(
+                    puntoEsfera, this.centro);
+            
+            puntoAlcance=new PuntoAlcanzadoPorRayo(puntoEsfera,
+                    vectorNormalEsfera, t, true);
         } 
         return puntoAlcance;
+    }
+    
+    
+    /* Colorea la superficie de la esfera según el vector normal perpendicular al
+    punto donde la esfera es alcanzada por un rayo */
+    public Color colorRayoSegunNormalPerpendicular(Rayo rayo, 
+            PuntoAlcanzadoPorRayo puntoEsfera){
+        double t = puntoEsfera.getT();
+        Punto3D posicion = rayo.getPosicion(t);
+        Vec3 vectorUnitarioNormal = puntoEsfera.vectorUnitarioNormal();
+        double r = (1+ vectorUnitarioNormal.getV1() )  * 0.5;
+        double g = (1+ vectorUnitarioNormal.getV2() )  * 0.5;
+        double b = (1+ vectorUnitarioNormal.getV3() )  * 0.5;
+        return new Color (r, g, b);
     }
 }

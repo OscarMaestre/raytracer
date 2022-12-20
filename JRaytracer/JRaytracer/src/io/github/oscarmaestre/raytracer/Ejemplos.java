@@ -27,10 +27,35 @@ public class Ejemplos {
                 Color.getBlanco(), (double)altoPx));
         for (int cy=0; cy<altoPx; cy++){
             base=Color.sumar(base, incremento);
-            System.out.println("Pasando al color:"+base.toStringWithDouble());
             for (int cx=0; cx<anchoPx; cx++){
                 Rayo rayoHacia = viewportSimple.getRayoHacia(cx, cy);
                 imagen.setColor(cx, cy, base);
+            } //Fin del for para cx
+        } //Fin del for para cy
+        return imagen;
+    }
+    
+    public static Imagen getEsferaColoreadaSegunNormal(){
+        
+        Viewport viewportSimple = Viewport.getViewportSimple();
+        final int anchoPx=viewportSimple.getAnchoPixelesReales();
+        final int altoPx =viewportSimple.getAltoPixelesReales();
+        Imagen imagen=new Imagen(anchoPx, altoPx);
+        Punto3D centroEsfera=new Punto3D(0.0, 0.0, -1);
+        Esfera esfera=new Esfera(centroEsfera, 0.5);
+        for (int cy=0; cy<altoPx; cy++){
+            for (int cx=0; cx<anchoPx; cx++){
+                Color colorEnPixel;
+                Rayo rayoHacia = viewportSimple.getRayoHacia(cx, cy);
+                PuntoAlcanzadoPorRayo esAlcanzadaPorRayo;
+                esAlcanzadaPorRayo = esfera.esAlcanzadaPorRayo(rayoHacia);
+                if (esAlcanzadaPorRayo!=null){
+                    colorEnPixel=esfera.colorRayoSegunNormalPerpendicular(
+                            rayoHacia, esAlcanzadaPorRayo);
+                } else {
+                    colorEnPixel=Color.getNegro();
+                }
+                imagen.setColor(cx, cy, colorEnPixel);
             } //Fin del for para cx
         } //Fin del for para cy
         return imagen;

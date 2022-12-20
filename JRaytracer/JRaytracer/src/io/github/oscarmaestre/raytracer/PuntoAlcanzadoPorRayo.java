@@ -9,10 +9,10 @@ package io.github.oscarmaestre.raytracer;
  * @author usuario
  */
 public class PuntoAlcanzadoPorRayo {
-    private Punto3D punto;
-    private Vec3    normal;
-    private double  t;
-    private boolean estaEnExterior;
+    private final Punto3D punto;
+    private final Vec3    normal;
+    private final double  t;
+    private final boolean estaEnExterior;
 
     public PuntoAlcanzadoPorRayo(Punto3D punto, Vec3 normal, double t, boolean estaEnExterior) {
         this.punto = punto;
@@ -20,5 +20,24 @@ public class PuntoAlcanzadoPorRayo {
         this.t = t;
         this.estaEnExterior = estaEnExterior;
     }
+
+    public Punto3D getPunto() {
+        return punto;
+    }
+
+    public Vec3 getNormal() {
+        return normal;
+    }
+
+    public double getT() {
+        return t;
+    }
+
+    public boolean isEstaEnExterior() {
+        return estaEnExterior;
+    }
     
+    public Vec3 vectorUnitarioNormal(){
+        return Vec3.vectorUnitario(this.normal);
+    }    
 }

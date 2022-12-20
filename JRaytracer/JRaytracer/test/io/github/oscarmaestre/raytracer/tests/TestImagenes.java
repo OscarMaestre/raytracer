@@ -28,7 +28,13 @@ public class TestImagenes {
         Imagen i=Ejemplos.generarGradiente(new Color(0.0, 1.0, 0.0));
         i.guardarImagenComoPPM("gradiente_verde.ppm");
     }
-    
+
+    @Test
+    public void imagenEsferaBlancoYNegro() throws FileNotFoundException {
+        Imagen i=Ejemplos.getEsferaColoreadaSegunNormal();
+        i.guardarImagenComoPPM("esfera_normal.ppm");
+    }
+
     @Test
     public void imagen1() throws FileNotFoundException {
         Imagen i=Imagen.getPrimeraImagen();
