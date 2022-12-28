@@ -8,6 +8,9 @@ package io.github.oscarmaestre.raytracer;
  *
  * @author usuario
  */
-public class ObjetoRenderizable {
+public abstract class ObjetoRenderizable {
+    public  abstract PuntoAlcanzadoPorRayo esAlcanzadaPorRayo(
+            Rayo rayo, double t_minimo, double t_maximo);
+    
     
 }

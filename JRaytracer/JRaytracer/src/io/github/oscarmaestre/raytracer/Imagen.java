@@ -161,7 +161,7 @@ public class Imagen {
     
     private static boolean golpeaEsferaRoja(Esfera esfera,  Rayo r){
         PuntoAlcanzadoPorRayo esAlcanzadaPorRayo;
-        esAlcanzadaPorRayo = esfera.esAlcanzadaPorRayo(r);
+        esAlcanzadaPorRayo = esfera.esAlcanzadaPorRayo(r, 0, 10000);
         if (esAlcanzadaPorRayo!=null){
             return true;
         }

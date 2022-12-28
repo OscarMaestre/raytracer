@@ -48,12 +48,12 @@ public class Ejemplos {
                 Color colorEnPixel;
                 Rayo rayoHacia = viewportSimple.getRayoHacia(cx, cy);
                 PuntoAlcanzadoPorRayo esAlcanzadaPorRayo;
-                esAlcanzadaPorRayo = esfera.esAlcanzadaPorRayo(rayoHacia);
+                esAlcanzadaPorRayo = esfera.esAlcanzadaPorRayo(rayoHacia, 0, 50000);
                 if (esAlcanzadaPorRayo!=null){
                     colorEnPixel=esfera.colorRayoSegunNormalPerpendicular(
                             rayoHacia, esAlcanzadaPorRayo);
                 } else {
-                    colorEnPixel=Color.getNegro();
+                    colorEnPixel=Color.getBlanco();
                 }
                 imagen.setColor(cx, cy, colorEnPixel);
             } //Fin del for para cx

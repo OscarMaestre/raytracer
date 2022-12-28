@@ -73,7 +73,14 @@ public class Color extends Vec3 {
         if (b>1.0){
             b=1.0;
         }
-        return new Color(r, g, b);
-        
+        return new Color(r, g, b);       
     }
+    
+    public double limitarRango(
+            double valor, double min_aceptado, double max_aceptado)
+    {
+        if (valor<min_aceptado) return min_aceptado;
+        if (valor>max_aceptado) return max_aceptado;
+        return valor;
+    } //Fin de limitarRango
 }

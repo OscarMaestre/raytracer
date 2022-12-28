@@ -40,4 +40,13 @@ public class PuntoAlcanzadoPorRayo {
     public Vec3 vectorUnitarioNormal(){
         return Vec3.vectorUnitario(this.normal);
     }    
+    public static PuntoAlcanzadoPorRayo from (Esfera esfera, Rayo rayo, double t){
+        Punto3D puntoEnEsfera = rayo.getPosicion(t);
+        Vec3 vectorNormalEsfera=Vec3.restarVectores(
+                    puntoEnEsfera, esfera.getCentro());
+        PuntoAlcanzadoPorRayo puntoAlcance;
+            puntoAlcance=new PuntoAlcanzadoPorRayo(puntoEnEsfera,
+                    vectorNormalEsfera, t, true);
+        return puntoAlcance;
+    }
 }
