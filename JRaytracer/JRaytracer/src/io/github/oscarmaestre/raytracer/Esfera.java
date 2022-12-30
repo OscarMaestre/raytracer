@@ -1,19 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package io.github.oscarmaestre.raytracer;
 
-/**
- *
- * @author usuario
- */
 public class Esfera extends ObjetoRenderizable {
-    private Punto3D centro;
-    private double  radio;
+    private final Punto3D centro;
+    private final double  radio;
 
     public Esfera(Punto3D centro, double radio) {
-        this.centro = centro;
+        this.centro = centro.getCopia();
         this.radio = radio;
     }
 
@@ -76,6 +68,7 @@ public class Esfera extends ObjetoRenderizable {
         return puntoAlcance;
     } //Fin del método calcularMejorSolucion
             
+    @Override
     public PuntoAlcanzadoPorRayo esAlcanzadaPorRayo(
             Rayo rayo, double t_minimo, double t_maximo){
         /* Recordemos que en la esfera queremos resolver la
@@ -95,14 +88,10 @@ public class Esfera extends ObjetoRenderizable {
         double c=Vec3.productoEscalar(a_menos_c, a_menos_c) - 
                 (this.radio * this.radio);
         double discriminante = (double) (b*b)-(4.0*a*c);
+        
+        
         if (discriminante>0){
-            double t=(-b-Math.sqrt(discriminante) ) / (2.0*a);
-            Punto3D puntoEsfera = rayo.getPosicion(t);
-            Vec3 vectorNormalEsfera=Vec3.restarVectores(
-                    puntoEsfera, this.centro);
-            
-            puntoAlcance=new PuntoAlcanzadoPorRayo(puntoEsfera,
-                    vectorNormalEsfera, t, true);
+            puntoAlcance = this.calcularMejorSolucionRayoAlcanzaEsfera(rayo, a, b, discriminante, t_minimo, t_maximo);
         } 
         return puntoAlcance;
     }

@@ -1,7 +1,7 @@
 package io.github.oscarmaestre.raytracer;
 public class Ejemplos {
     public static Imagen generarImagenAzul(){
-        Viewport viewportSimple = Viewport.getViewportSimple();
+        Camara viewportSimple = Camara.getCamaraSimple();
         final int anchoPx=viewportSimple.getAnchoPixelesReales();
         final int altoPx =viewportSimple.getAltoPixelesReales();
         Imagen imagen=new Imagen(anchoPx, altoPx);
@@ -15,7 +15,7 @@ public class Ejemplos {
         return imagen;
     } //Fin del método generarImagenAzul
     public static Imagen generarGradiente(Color base){
-        Viewport viewportSimple = Viewport.getViewportSimple();
+        Camara viewportSimple = Camara.getCamaraSimple();
         final int anchoPx=viewportSimple.getAnchoPixelesReales();
         final int altoPx =viewportSimple.getAltoPixelesReales();
         Imagen imagen=new Imagen(anchoPx, altoPx);
@@ -37,7 +37,7 @@ public class Ejemplos {
     
     public static Imagen getEsferaColoreadaSegunNormal(){
         
-        Viewport viewportSimple = Viewport.getViewportSimple();
+        Camara viewportSimple = Camara.getCamaraSimple();
         final int anchoPx=viewportSimple.getAnchoPixelesReales();
         final int altoPx =viewportSimple.getAltoPixelesReales();
         Imagen imagen=new Imagen(anchoPx, altoPx);

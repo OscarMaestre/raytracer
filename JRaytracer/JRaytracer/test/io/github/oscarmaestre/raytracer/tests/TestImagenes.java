@@ -51,5 +51,10 @@ public class TestImagenes {
         Imagen i=Imagen.getTerceraImagen();
         i.guardarImagenComoPPM("tercera_imagen.ppm");
     }
+    @Test
+    public void imagen4() throws FileNotFoundException {
+        Imagen i=Imagen.getCuartaImagen(true, 0);
+        i.guardarImagenComoPPM("cuarta_imagen.ppm");
+    }
 
 }

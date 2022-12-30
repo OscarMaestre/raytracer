@@ -1,6 +1,6 @@
 package io.github.oscarmaestre.raytracer;
 
-public class Viewport {
+public class Camara {
     private final double anchoVirtual;
     private final double altoVirtual;
     
@@ -14,7 +14,7 @@ public class Viewport {
     /* Este punto suele ser el (0, 0, 0)*/
     private final Punto3D origenRayos;
     private final double distanciaFocal;
-    public Viewport(double anchoVirtual, double altoVirtual, 
+    public Camara(double anchoVirtual, double altoVirtual, 
             int anchoPixelesReales, int altoPixelesReales,
             Punto3D origenRayos, double distanciaFocal) {
         this.anchoVirtual       = anchoVirtual;
@@ -53,7 +53,7 @@ public class Viewport {
     
     /* Devuelve un viewport de 2x1.77 a una distancia focal de 1.0
     que se proyecta sobre una imagen de 400x225 con un origen en 0.0  */
-    public static Viewport getViewportSimple(){
+    public static Camara getCamaraSimple(){
         final double    ASPECT_RATIO= 16.0/9.0;
         final int       ANCHO       = 400;
         final int       ALTO        = (int) (ANCHO / ASPECT_RATIO);
@@ -65,7 +65,7 @@ public class Viewport {
         
         final Punto3D   origen  =   new Punto3D(0.0, 0.0, 0.0);
         
-        Viewport viewport=new Viewport(ANCHURA_VIEWPORT, ALTURA_VIEWPORT,
+        Camara viewport=new Camara(ANCHURA_VIEWPORT, ALTURA_VIEWPORT,
             ANCHO, ALTO, origen, distanciaFocal);
         return viewport;
     }
@@ -90,6 +90,12 @@ public class Viewport {
         Rayo r=new Rayo(this.origenRayos, direccion);
         return r;
     }
+
+    public Punto3D getOrigenRayos() {
+        return origenRayos;
+    }
+    
+    
     public int getAnchoPixelesReales() {
         return anchoPixelesReales;
     }
@@ -97,5 +103,18 @@ public class Viewport {
     public int getAltoPixelesReales() {
         return altoPixelesReales;
     }
+    
+    public Vec3 getVectorHorizontal(){
+         return new Vec3(this.anchoVirtual, 0.0, 0.0);
+    }
+    public Vec3 getVectorVertical(){
+         return new Vec3(0.0, this.altoVirtual, 0.0);
+    }
+    
+    public Vec3 getVectorProfundiad(){
+         return new Vec3(0.0, 0.0, this.distanciaFocal);
+    }
+    
+    
     
 }

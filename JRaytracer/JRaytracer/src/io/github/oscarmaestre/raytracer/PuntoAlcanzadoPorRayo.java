@@ -12,13 +12,11 @@ public class PuntoAlcanzadoPorRayo {
     private final Punto3D punto;
     private final Vec3    normal;
     private final double  t;
-    private final boolean estaEnExterior;
 
-    public PuntoAlcanzadoPorRayo(Punto3D punto, Vec3 normal, double t, boolean estaEnExterior) {
+    public PuntoAlcanzadoPorRayo(Punto3D punto, Vec3 normal, double t) {
         this.punto = punto;
         this.normal = normal;
         this.t = t;
-        this.estaEnExterior = estaEnExterior;
     }
 
     public Punto3D getPunto() {
@@ -33,20 +31,43 @@ public class PuntoAlcanzadoPorRayo {
         return t;
     }
 
-    public boolean isEstaEnExterior() {
-        return estaEnExterior;
-    }
     
     public Vec3 vectorUnitarioNormal(){
         return Vec3.vectorUnitario(this.normal);
     }    
+    /**
+     * Calcula si el alcance se da por el exterior de la esfera
+     * o por el interior
+     * @param rayo Rayo que alcanza la esfera
+     * @param normal Vector normal a la esfera
+     * @return true si el alcance se da en el exterior o false si
+     * se da por dentro de la esfera */
+    private boolean alcanceOcurreEnExterior(Rayo rayo, Vec3 normal){
+        double productoEscalar = Vec3.productoEscalar(rayo.getDireccion(), normal);
+        if (productoEscalar>0.0){
+            return false;
+        }
+        return true;
+    }
+    private Vec3 rectificarNormalSiProcede(Rayo rayo, Vec3 normal){
+        if (this.alcanceOcurreEnExterior(rayo, normal)){
+            return normal;
+        } 
+        normal.cambiarSigno();
+        return normal;
+    }
     public static PuntoAlcanzadoPorRayo from (Esfera esfera, Rayo rayo, double t){
         Punto3D puntoEnEsfera = rayo.getPosicion(t);
         Vec3 vectorNormalEsfera=Vec3.restarVectores(
                     puntoEnEsfera, esfera.getCentro());
+        
+        /* En principio asumimos que el punto está
+        en el exterior de la esfera */
         PuntoAlcanzadoPorRayo puntoAlcance;
             puntoAlcance=new PuntoAlcanzadoPorRayo(puntoEnEsfera,
-                    vectorNormalEsfera, t, true);
+                    vectorNormalEsfera, t);
+        /* Si es necesario, la normal se invierte*/
+        puntoAlcance.rectificarNormalSiProcede(rayo, vectorNormalEsfera);
         return puntoAlcance;
     }
 }

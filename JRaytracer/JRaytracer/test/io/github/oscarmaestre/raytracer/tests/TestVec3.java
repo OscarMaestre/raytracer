@@ -104,6 +104,30 @@ public class TestVec3 {
         double productoEscalar = Vec3.productoEscalar(v1, v2);
         Assert.assertEquals(0.0,productoEscalar , 0.001);
     }
+    
+    @Test 
+    public void testRestaMultiple(){
+        Vec3 v1=new Vec3 (1.0, 0.0, 0.0);
+        Vec3 v2=new Vec3 (0.0, 1.0, 0.0);
+        Vec3 v3=new Vec3 (0.0, 1.0, 0.0);
+        Vec3 resultado = Vec3.restarVectores(v1, v2, v3);
+        Assert.assertEquals(1.0,resultado.getV1() , 0.001);
+        Assert.assertEquals(-2.0,resultado.getV2() , 0.001);
+        Assert.assertEquals(0.0,resultado.getV3() , 0.001);
+    }
+    
+    @Test 
+    public void testRestaMultiple2(){
+        Vec3 v1=new Vec3 (1.0, 0.0, 0.0);
+        Vec3 v2=new Vec3 (0.0, 1.0, 0.0);
+        Vec3 v3=new Vec3 (0.0, 1.0, 0.0);
+        Vec3 v4=new Vec3 (0.0, 1.0, -1.0);
+        Vec3 resultado = Vec3.restarVectores(v1, v2, v3, v4);
+        Assert.assertEquals(1.0,resultado.getV1() , 0.001);
+        Assert.assertEquals(-3.0,resultado.getV2() , 0.001);
+        Assert.assertEquals(1.0,resultado.getV3() , 0.001);
+    }
+    
     @Test
     public void testVectorUnitario(){
         Vec3 v1=new Vec3(2, 3, 4);

@@ -90,6 +90,30 @@ public class Vec3 {
         double resultado3=v1.getV3()-v2.getV3();
         return new Vec3(resultado1,resultado2,resultado3);
     }
+    /**
+     * Resta al primer vector los otros dos
+     * @param v1 Vector original
+     * @param v2 Vector que se resta a v1
+     * @param v3 Vector que se resta a v2
+     * @return 
+     */
+    public static Vec3 restarVectores(Vec3 v1, Vec3 v2, Vec3 v3){
+        Vec3 sumaVectoresParaRestar=Vec3.sumarVectores(v2, v3);
+        return Vec3.restarVectores(v1, sumaVectoresParaRestar);
+    }
+    
+    /**
+     * Resta al primer vector los otros tres
+     * @param v1 Vector original
+     * @param v2 Vector que se resta al original
+     * @param v3 Vector que se resta al original
+     * @param v4 Vector que se resta al original
+     * @return 
+     */
+    public static Vec3 restarVectores(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4){
+        Vec3 sumaVectoresParaRestar=Vec3.sumarVectores(v2, v3, v4);
+        return Vec3.restarVectores(v1, sumaVectoresParaRestar);
+    }
     
     public static Vec3 multiplicarVectores(Vec3 v1, Vec3 v2){
         double resultado1=v1.getV1()*v2.getV1();
@@ -146,7 +170,7 @@ public class Vec3 {
         double v1 = this.getV1();
         double v2 = this.getV2();
         double v3 = this.getV3();
-        String str="("+v1+","+v2+","+v3+")";
+        String str="<"+v1+","+v2+","+v3+">";
         return str;
     }
     

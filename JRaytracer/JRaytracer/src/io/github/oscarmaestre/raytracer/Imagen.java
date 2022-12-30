@@ -9,7 +9,7 @@ public class Imagen {
     private int ancho;
 
     Color pixeles[][];
-
+    boolean antialiasing=false;
     public Imagen(int ancho, int alto) {
         this.alto = alto;
         this.ancho = ancho;
@@ -65,19 +65,33 @@ public class Imagen {
         Vec3 semiHorizontal = 
                 Vec3.dividirVectorPorEscalar(vHorizontal, 2);
         Vec3 profundidad = new Vec3(0, 0, distanciaFocal);
-//        System.out.println("La semihorizontal es:"+semiHorizontal.toString());
-//        System.out.println("La semivertical es:"+semiVertical.toString());
-//        System.out.println("La profundidad es:"+profundidad.toString());
         
         /* Y ahora al origen le restamos la semihorizontal,
-        la semivertical y toda la profundidad (lo que hace 
-        "retroceder" desde la pantalla*/
-        Vec3 resultadoParcial1 = 
-                Vec3.restarVectores(origen, semiHorizontal);
-        Vec3 resultadoParcial2 = 
-                Vec3.restarVectores(resultadoParcial1, semiVertical);
-        Vec3 esquinaInfIzq = 
-                Vec3.restarVectores(resultadoParcial2, profundidad);
+        la semivertical y toda la profundidad (lo que nos hace 
+        "retroceder" desde la pantalla)*/
+        Vec3 esquinaInfIzq=Vec3.restarVectores(origen, 
+                semiHorizontal, semiVertical, profundidad);
+        
+        return Punto3D.fromVec3(esquinaInfIzq);
+    }
+    public static Punto3D calcularEsqInfIzq(Punto3D origen,
+            Vec3 vHorizontal, Vec3 vVertical,
+            Vec3 profundidad ){
+        
+        /* Igual que antes: calculamos la mitad de los vectores
+        de ancho y alto  */
+        Vec3 semiVertical = 
+                Vec3.dividirVectorPorEscalar(vVertical, 2);
+        Vec3 semiHorizontal = 
+                Vec3.dividirVectorPorEscalar(vHorizontal, 2);
+        
+        
+        /* Y ahora al origen le restamos la semihorizontal,
+        la semivertical y toda la profundidad (lo que nos hace 
+        "retroceder" desde la pantalla)*/
+        Vec3 esquinaInfIzq=Vec3.restarVectores(origen, 
+                semiHorizontal, semiVertical, profundidad);
+        
         return Punto3D.fromVec3(esquinaInfIzq);
     }
     
@@ -221,6 +235,46 @@ public class Imagen {
                 }
                 else {
                     colorEnPunto = Imagen.calcularColorRayoEnSegundaImagen(r);
+                }
+                imagenResultado.setColor(cx, cy, colorEnPunto);
+            }
+        }
+        return imagenResultado;
+    }
+    
+    public static Imagen getCuartaImagen(boolean conAntialiasing, int numMuestras){
+        Camara viewportSimple  = Camara.getCamaraSimple();
+        Vec3 vHorizontal         = viewportSimple.getVectorHorizontal();
+        Vec3 vVertical           = viewportSimple.getVectorVertical();
+        Vec3 vProfundidad        = viewportSimple.getVectorProfundiad();
+        Punto3D esqInfIzq = 
+                Imagen.calcularEsqInfIzq(viewportSimple.getOrigenRayos(), 
+                        vHorizontal, 
+                        vVertical, 
+                        vProfundidad);
+        
+        Imagen imagenResultado = new Imagen(viewportSimple.getAnchoPixelesReales(), 
+                viewportSimple.getAltoPixelesReales());
+        /* La esfera está justo en el centro de nuestra pantalla,
+        a una unidad de distancia del centro de la pantalla */
+        Escena escena=new Escena();
+        escena.addEsfera(0, 0, -1, 0.5);
+        escena.addEsfera(0.0, 1.0, -1.0, 0.5);
+        
+        /*Esto se puede optimizar bastante, por ejemplo
+        sacando algunas cosas del bucle interior*/
+        
+        int muestrasParaAntialiasing=100;
+        for (int cy=0; cy<viewportSimple.getAltoPixelesReales(); cy++){
+            for (int cx=0; cx<viewportSimple.getAnchoPixelesReales(); cx++){
+                Rayo rayo = viewportSimple.getRayoHacia(cx, cy);
+                Color colorEnPunto=Color.getNegro();
+                
+                if (escena.rayoGolpeaObjeto(rayo, 0, 25.0)!=null){
+                    colorEnPunto=Imagen.calcularColorRayoEnSegundaImagen(rayo);
+                }
+                else {
+                    colorEnPunto = Color.getBlanco();
                 }
                 imagenResultado.setColor(cx, cy, colorEnPunto);
             }
