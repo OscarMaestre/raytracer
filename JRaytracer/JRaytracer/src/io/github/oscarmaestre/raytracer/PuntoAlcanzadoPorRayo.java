@@ -10,10 +10,10 @@ package io.github.oscarmaestre.raytracer;
  */
 public class PuntoAlcanzadoPorRayo {
     private final Punto3D punto;
-    private final Vec3    normal;
+    private final Vector3D    normal;
     private final double  t;
 
-    public PuntoAlcanzadoPorRayo(Punto3D punto, Vec3 normal, double t) {
+    public PuntoAlcanzadoPorRayo(Punto3D punto, Vector3D normal, double t) {
         this.punto = punto;
         this.normal = normal;
         this.t = t;
@@ -23,7 +23,7 @@ public class PuntoAlcanzadoPorRayo {
         return punto;
     }
 
-    public Vec3 getNormal() {
+    public Vector3D getNormal() {
         return normal;
     }
 
@@ -32,8 +32,8 @@ public class PuntoAlcanzadoPorRayo {
     }
 
     
-    public Vec3 vectorUnitarioNormal(){
-        return Vec3.vectorUnitario(this.normal);
+    public Vector3D vectorUnitarioNormal(){
+        return this.normal.vectorUnitario();
     }    
     /**
      * Calcula si el alcance se da por el exterior de la esfera
@@ -42,23 +42,23 @@ public class PuntoAlcanzadoPorRayo {
      * @param normal Vector normal a la esfera
      * @return true si el alcance se da en el exterior o false si
      * se da por dentro de la esfera */
-    private boolean alcanceOcurreEnExterior(Rayo rayo, Vec3 normal){
-        double productoEscalar = Vec3.productoEscalar(rayo.getDireccion(), normal);
+    private boolean alcanceOcurreEnExterior(Rayo rayo, Vector3D normal){
+        double productoEscalar = Vector3D.productoEscalar(rayo.getDireccion(), normal);
         if (productoEscalar>0.0){
             return false;
         }
         return true;
     }
-    private Vec3 rectificarNormalSiProcede(Rayo rayo, Vec3 normal){
+    private Vector3D rectificarNormalSiProcede(Rayo rayo, Vector3D normal){
         if (this.alcanceOcurreEnExterior(rayo, normal)){
             return normal;
         } 
-        normal.cambiarSigno();
+        normal=Vector3D.cambiarSigno(normal);
         return normal;
     }
     public static PuntoAlcanzadoPorRayo from (Esfera esfera, Rayo rayo, double t){
         Punto3D puntoEnEsfera = rayo.getPosicion(t);
-        Vec3 vectorNormalEsfera=Vec3.restarVectores(
+        Vector3D vectorNormalEsfera=Vector3D.restarVectores(
                     puntoEnEsfera, esfera.getCentro());
         
         /* En principio asumimos que el punto está

@@ -4,7 +4,7 @@
  */
 package io.github.oscarmaestre.raytracer.tests;
 
-import io.github.oscarmaestre.raytracer.Vec3;
+import io.github.oscarmaestre.raytracer.Vector3D;
 import org.testng.Assert;
 import static org.testng.Assert.*;
 import org.testng.annotations.BeforeMethod;
@@ -21,22 +21,22 @@ public class TestVec3 {
 
     @Test
     public void hello() {
-        Vec3 v1=new Vec3(0.435, 0.173, 0.888);
+        Vector3D v1=new Vector3D(0.435, 0.173, 0.888);
         Assert.assertEquals(0.435, v1.getV1(), 0.001);
     }
     
     @Test
     public void sumaCuatroVectores() {
-        Vec3 vector1=new Vec3(1.0, 1.0, 1.0);
-        Vec3 suma = Vec3.sumarVectores(vector1, vector1, vector1, vector1);
+        Vector3D vector1=new Vector3D(1.0, 1.0, 1.0);
+        Vector3D suma = Vector3D.sumarVectores(vector1, vector1, vector1, vector1);
         double v1 = suma.getV1();
         Assert.assertEquals(v1, 4.0, 0.005);
     }
 
     @Test 
     public void restaVectores() {
-        Vec3 vector1=new Vec3(1.0, 1.0, 1.0);
-        Vec3 resta = Vec3.restarVectores(vector1, vector1);
+        Vector3D vector1=new Vector3D(1.0, 1.0, 1.0);
+        Vector3D resta = Vector3D.restarVectores(vector1, vector1);
         double v1 = resta.getV1();
         double v2 = resta.getV2();
         double v3 = resta.getV3();
@@ -48,9 +48,9 @@ public class TestVec3 {
     
     @Test
     public void tesMultiplicarVec3porEscalar(){
-        Vec3 vector=new Vec3 (1.0, 2.0, 3.0);
+        Vector3D vector=new Vector3D (1.0, 2.0, 3.0);
         double escalar=2.0;
-        vector.multiplicarPorEscalar(escalar);
+        vector=Vector3D.multiplicarVectorPorEscalar(vector, escalar);
         double v1 = vector.getV1();
         double v2 = vector.getV2();
         double v3 = vector.getV3();
@@ -62,9 +62,9 @@ public class TestVec3 {
     
     @Test
     public void testDividirEstaticoVec3porEscalar(){
-        Vec3 vector=new Vec3 (1.0, 2.0, 3.0);
+        Vector3D vector=new Vector3D (1.0, 2.0, 3.0);
         double escalar=2.0;
-        Vec3 resultado = Vec3.dividirVectorPorEscalar(vector, escalar);
+        Vector3D resultado = Vector3D.dividirVectorPorEscalar(vector, escalar);
         double d1=resultado.getV1();
         double d2=resultado.getV2();
         double d3=resultado.getV3();
@@ -74,9 +74,9 @@ public class TestVec3 {
     }
     @Test
     public void tesMultiplicarEstaticoVec3porEscalar(){
-        Vec3 vector=new Vec3 (1.0, 2.0, 3.0);
+        Vector3D vector=new Vector3D (1.0, 2.0, 3.0);
         double escalar=2.0;
-        Vec3 resultado = Vec3.multiplicarVectorPorEscalar(vector, escalar);
+        Vector3D resultado = Vector3D.multiplicarVectorPorEscalar(vector, escalar);
         
         double v1 = resultado.getV1();
         double v2 = resultado.getV2();
@@ -89,28 +89,28 @@ public class TestVec3 {
     @Test
     public void testVectorUnidad(){
         double longitud;
-        Vec3 vector=new Vec3 (1.0, 2.0, 3.0);
+        Vector3D vector=new Vector3D (1.0, 2.0, 3.0);
         longitud=vector.getLongitud();
         Assert.assertEquals(longitud, 3.74,0.005);
-        Vec3 vectorUnitario = Vec3.vectorUnitario(vector);
+        Vector3D vectorUnitario = vector.vectorUnitario();
         longitud = vectorUnitario.getLongitud();
         Assert.assertEquals(longitud, 1,0.005);
     }
     
     @Test 
     public void testProductoEscalar(){
-        Vec3 v1=new Vec3 (1.0, 0.0, 0.0);
-        Vec3 v2=new Vec3 (0.0, 1.0, 0.0);
-        double productoEscalar = Vec3.productoEscalar(v1, v2);
+        Vector3D v1=new Vector3D (1.0, 0.0, 0.0);
+        Vector3D v2=new Vector3D (0.0, 1.0, 0.0);
+        double productoEscalar = Vector3D.productoEscalar(v1, v2);
         Assert.assertEquals(0.0,productoEscalar , 0.001);
     }
     
     @Test 
     public void testRestaMultiple(){
-        Vec3 v1=new Vec3 (1.0, 0.0, 0.0);
-        Vec3 v2=new Vec3 (0.0, 1.0, 0.0);
-        Vec3 v3=new Vec3 (0.0, 1.0, 0.0);
-        Vec3 resultado = Vec3.restarVectores(v1, v2, v3);
+        Vector3D v1=new Vector3D (1.0, 0.0, 0.0);
+        Vector3D v2=new Vector3D (0.0, 1.0, 0.0);
+        Vector3D v3=new Vector3D (0.0, 1.0, 0.0);
+        Vector3D resultado = Vector3D.restarVectores(v1, v2, v3);
         Assert.assertEquals(1.0,resultado.getV1() , 0.001);
         Assert.assertEquals(-2.0,resultado.getV2() , 0.001);
         Assert.assertEquals(0.0,resultado.getV3() , 0.001);
@@ -118,11 +118,11 @@ public class TestVec3 {
     
     @Test 
     public void testRestaMultiple2(){
-        Vec3 v1=new Vec3 (1.0, 0.0, 0.0);
-        Vec3 v2=new Vec3 (0.0, 1.0, 0.0);
-        Vec3 v3=new Vec3 (0.0, 1.0, 0.0);
-        Vec3 v4=new Vec3 (0.0, 1.0, -1.0);
-        Vec3 resultado = Vec3.restarVectores(v1, v2, v3, v4);
+        Vector3D v1=new Vector3D (1.0, 0.0, 0.0);
+        Vector3D v2=new Vector3D (0.0, 1.0, 0.0);
+        Vector3D v3=new Vector3D (0.0, 1.0, 0.0);
+        Vector3D v4=new Vector3D (0.0, 1.0, -1.0);
+        Vector3D resultado = Vector3D.restarVectores(v1, v2, v3, v4);
         Assert.assertEquals(1.0,resultado.getV1() , 0.001);
         Assert.assertEquals(-3.0,resultado.getV2() , 0.001);
         Assert.assertEquals(1.0,resultado.getV3() , 0.001);
@@ -130,8 +130,9 @@ public class TestVec3 {
     
     @Test
     public void testVectorUnitario(){
-        Vec3 v1=new Vec3(2, 3, 4);
-        Vec3 vectorUnitario = Vec3.vectorUnitario(v1);
+        Vector3D v1=new Vector3D(2, 3, 4);
+        Vector3D vectorUnitario;
+        vectorUnitario = v1.vectorUnitario();
         System.out.println(vectorUnitario.toString());
     }
     @BeforeMethod

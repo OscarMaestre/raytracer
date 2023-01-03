@@ -2,8 +2,46 @@ package io.github.oscarmaestre.raytracer;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Random;
 
 public class Imagen {
+
+    private static Color getColorConAntialiasing(
+            Camara camara, Escena escena,int cx, int cy,
+            int muestrasParaAntialiasing) 
+    {
+        Random generadorAzar=new Random();
+        /*Inicialmente, el color de fondo es este*/
+        Color colorFondo=Color.getBlanco();    
+        for (int i = 0; i < muestrasParaAntialiasing; i++) {
+            /* Cuidado: es obligatorio poner 2 para que Java
+            elija aleatorios entre 0 y 1. Si quisiéramos entre
+            0 y 4 habría que poner nextInt(5) */
+            int variacionDeX=generadorAzar.nextInt(2);
+            int variacionDeY=generadorAzar.nextInt(2);
+            int nuevoX=cx+variacionDeX;
+            int nuevoY=cy+variacionDeY;
+            Rayo rayoHacia = camara.getRayoHacia(nuevoX, nuevoY);
+            if (escena.rayoGolpeaObjeto(rayoHacia, 0, 25.0)!=null){
+                Color colorEnPunto=Color.getRojo();
+                colorFondo = (Color) colorFondo.sumar(colorEnPunto);
+                
+            }
+            
+        } //Fin del bucle que toma muchas muestras de color alrededor del punto
+        /* Ahora pueden pasar dos cosas:
+            1.-El rayo no golpeó ningún objeto y 
+                el color calculado es negro. Aún así devolveremos un
+                color de fondo cualquiera
+            2.-El rayo sí golpeó algo y entonces hay que
+                promediar el color*/
+        /*Si llegamos aquí es que el rayo golpeó algo.
+        Dividimos el color entre el número de muestras lo
+        que nos da un "color promediado con respecto a los de su alrededor */
+        colorFondo = (Color) colorFondo.dividirPorEscalar(muestrasParaAntialiasing);
+        
+        return colorFondo;
+    }
 
     private int alto;
     private int ancho;
@@ -55,49 +93,49 @@ public class Imagen {
     }
     
     public static Punto3D calcularEsqInfIzq(Punto3D origen,
-            Vec3 vHorizontal, Vec3 vVertical,
+            Vector3D vHorizontal, Vector3D vVertical,
             double distanciaFocal ){
         
         /* Calculamos la mitad de los vectores
         de ancho y alto  */
-        Vec3 semiVertical = 
-                Vec3.dividirVectorPorEscalar(vVertical, 2);
-        Vec3 semiHorizontal = 
-                Vec3.dividirVectorPorEscalar(vHorizontal, 2);
-        Vec3 profundidad = new Vec3(0, 0, distanciaFocal);
+        Vector3D semiVertical = 
+                Vector3D.dividirVectorPorEscalar(vVertical, 2);
+        Vector3D semiHorizontal = 
+                Vector3D.dividirVectorPorEscalar(vHorizontal, 2);
+        Vector3D profundidad = new Vector3D(0, 0, distanciaFocal);
         
         /* Y ahora al origen le restamos la semihorizontal,
         la semivertical y toda la profundidad (lo que nos hace 
         "retroceder" desde la pantalla)*/
-        Vec3 esquinaInfIzq=Vec3.restarVectores(origen, 
+        Vector3D esquinaInfIzq=Vector3D.restarVectores(origen, 
                 semiHorizontal, semiVertical, profundidad);
         
         return Punto3D.fromVec3(esquinaInfIzq);
     }
     public static Punto3D calcularEsqInfIzq(Punto3D origen,
-            Vec3 vHorizontal, Vec3 vVertical,
-            Vec3 profundidad ){
+            Vector3D vHorizontal, Vector3D vVertical,
+            Vector3D profundidad ){
         
         /* Igual que antes: calculamos la mitad de los vectores
         de ancho y alto  */
-        Vec3 semiVertical = 
-                Vec3.dividirVectorPorEscalar(vVertical, 2);
-        Vec3 semiHorizontal = 
-                Vec3.dividirVectorPorEscalar(vHorizontal, 2);
+        Vector3D semiVertical = 
+                Vector3D.dividirVectorPorEscalar(vVertical, 2);
+        Vector3D semiHorizontal = 
+                Vector3D.dividirVectorPorEscalar(vHorizontal, 2);
         
         
         /* Y ahora al origen le restamos la semihorizontal,
         la semivertical y toda la profundidad (lo que nos hace 
         "retroceder" desde la pantalla)*/
-        Vec3 esquinaInfIzq=Vec3.restarVectores(origen, 
+        Vector3D esquinaInfIzq=Vector3D.restarVectores(origen, 
                 semiHorizontal, semiVertical, profundidad);
         
         return Punto3D.fromVec3(esquinaInfIzq);
     }
     
     public static Color calcularColorRayoEnSegundaImagen(Rayo rayo){
-        Vec3 direccion = rayo.getDireccion();
-        Vec3 vectorUnitario = Vec3.vectorUnitario(direccion);
+        Vector3D direccion = rayo.getDireccion();
+        Vector3D vectorUnitario = direccion.vectorUnitario();
         /* Esto está entre 0 y 1 cuando el rayo está por encima del centro
         y entre -1 y 0 cuando está por debajo, lo que ayuda a hacer un
         gradiente*/
@@ -113,10 +151,10 @@ public class Imagen {
         Color tonoAzul      =   new Color(0.5, 0.7, 1.0);
         
         /* Modificamos ambos colores*/
-        colorBlanco.multiplicarPorEscalar(intensidadBlanco);
-        tonoAzul.multiplicarPorEscalar(t);
-        Vec3 colorFinal = 
-                Vec3.sumarVectores(colorBlanco, tonoAzul);
+        Color parteBlanca = (Color) colorBlanco.multiplicarPorEscalar(intensidadBlanco);
+        Color parteAzul   = (Color) tonoAzul.multiplicarPorEscalar(t);
+        
+        Color colorFinal =  (Color) parteBlanca.sumar(parteAzul);
         Color devolver=Color.from(colorFinal);
         return devolver;
     }
@@ -131,10 +169,10 @@ public class Imagen {
         
         final double    alturaViewport=2.0;
         final double    anchuraViewport= ASPECT_RATIO * alturaViewport ;
-        final Vec3      vHorizontal;
-        final Vec3      vVertical;
-        vHorizontal  =      new Vec3(anchuraViewport, 0.0, 0.0);
-        vVertical    =      new Vec3(0.0, alturaViewport, 0.0);
+        final Vector3D      vHorizontal;
+        final Vector3D      vVertical;
+        vHorizontal  =      new Vector3D(anchuraViewport, 0.0, 0.0);
+        vVertical    =      new Vector3D(0.0, alturaViewport, 0.0);
         
         Punto3D esqInfIzq = 
                 Imagen.calcularEsqInfIzq(origen, 
@@ -150,17 +188,19 @@ public class Imagen {
             for (int cx=0; cx<ANCHO; cx++){
                 double escalaX=(double)cx/(ANCHO-1);
                 double escalaY=(double)cy/(ALTO-1);
-                Vec3 desplazamientoX = 
-                        Vec3.multiplicarVectorPorEscalar(
+                Vector3D desplazamientoX = 
+                        Vector3D.multiplicarVectorPorEscalar(
                                 vHorizontal, escalaX);
-                Vec3 desplazamientoY = 
-                        Vec3.multiplicarVectorPorEscalar(
+                Vector3D desplazamientoY = 
+                        Vector3D.multiplicarVectorPorEscalar(
                                 vVertical, escalaY);
-                Vec3 desplazamientoZ=origen.getCopia();
+                Vector3D desplazamientoZ=origen.getCopia();
+                
                 /* Z se invierte porque el Z positivo está
                 "alejándonos de la pantalla */
-                desplazamientoZ.cambiarSigno();
-                Vec3 direccion = Vec3.sumarVectores(esqInfIzq, 
+                desplazamientoZ=Vector3D.cambiarSigno(desplazamientoZ);
+                
+                Vector3D direccion = Vector3D.sumarVectores(esqInfIzq, 
                         desplazamientoX,
                         desplazamientoY,
                         desplazamientoZ);
@@ -191,10 +231,10 @@ public class Imagen {
         
         final double    alturaViewport=2.0;
         final double    anchuraViewport= ASPECT_RATIO * alturaViewport ;
-        final Vec3      vHorizontal;
-        final Vec3      vVertical;
-        vHorizontal  =      new Vec3(anchuraViewport, 0.0, 0.0);
-        vVertical    =      new Vec3(0.0, alturaViewport, 0.0);
+        final Vector3D      vHorizontal;
+        final Vector3D      vVertical;
+        vHorizontal  =      new Vector3D(anchuraViewport, 0.0, 0.0);
+        vVertical    =      new Vector3D(0.0, alturaViewport, 0.0);
         
         Punto3D esqInfIzq = 
                 Imagen.calcularEsqInfIzq(origen, 
@@ -214,17 +254,17 @@ public class Imagen {
             for (int cx=0; cx<ANCHO; cx++){
                 double escalaX=(double)cx/(ANCHO-1);
                 double escalaY=(double)cy/(ALTO-1);
-                Vec3 desplazamientoX = 
-                        Vec3.multiplicarVectorPorEscalar(
+                Vector3D desplazamientoX = 
+                        Vector3D.multiplicarVectorPorEscalar(
                                 vHorizontal, escalaX);
-                Vec3 desplazamientoY = 
-                        Vec3.multiplicarVectorPorEscalar(
+                Vector3D desplazamientoY = 
+                        Vector3D.multiplicarVectorPorEscalar(
                                 vVertical, escalaY);
-                Vec3 desplazamientoZ=origen.getCopia();
+                Vector3D desplazamientoZ=origen.getCopia();
                 /* Z se invierte porque el Z positivo está
                 "alejándonos de la pantalla */
-                desplazamientoZ.cambiarSigno();
-                Vec3 direccion = Vec3.sumarVectores(esqInfIzq, 
+                desplazamientoZ=Vector3D.cambiarSigno(desplazamientoZ);
+                Vector3D direccion = Vector3D.sumarVectores(esqInfIzq, 
                         desplazamientoX,
                         desplazamientoY,
                         desplazamientoZ);
@@ -244,9 +284,9 @@ public class Imagen {
     
     public static Imagen getCuartaImagen(boolean conAntialiasing, int numMuestras){
         Camara viewportSimple  = Camara.getCamaraSimple();
-        Vec3 vHorizontal         = viewportSimple.getVectorHorizontal();
-        Vec3 vVertical           = viewportSimple.getVectorVertical();
-        Vec3 vProfundidad        = viewportSimple.getVectorProfundiad();
+        Vector3D vHorizontal         = viewportSimple.getVectorHorizontal();
+        Vector3D vVertical           = viewportSimple.getVectorVertical();
+        Vector3D vProfundidad        = viewportSimple.getVectorProfundiad();
         Punto3D esqInfIzq = 
                 Imagen.calcularEsqInfIzq(viewportSimple.getOrigenRayos(), 
                         vHorizontal, 
@@ -259,7 +299,7 @@ public class Imagen {
         a una unidad de distancia del centro de la pantalla */
         Escena escena=new Escena();
         escena.addEsfera(0, 0, -1, 0.5);
-        escena.addEsfera(0.0, 1.0, -1.0, 0.5);
+        escena.addEsfera(0,-99.5,-2, 100);
         
         /*Esto se puede optimizar bastante, por ejemplo
         sacando algunas cosas del bucle interior*/
@@ -267,15 +307,10 @@ public class Imagen {
         int muestrasParaAntialiasing=100;
         for (int cy=0; cy<viewportSimple.getAltoPixelesReales(); cy++){
             for (int cx=0; cx<viewportSimple.getAnchoPixelesReales(); cx++){
-                Rayo rayo = viewportSimple.getRayoHacia(cx, cy);
-                Color colorEnPunto=Color.getNegro();
-                
-                if (escena.rayoGolpeaObjeto(rayo, 0, 25.0)!=null){
-                    colorEnPunto=Imagen.calcularColorRayoEnSegundaImagen(rayo);
-                }
-                else {
-                    colorEnPunto = Color.getBlanco();
-                }
+                Color colorEnPunto;
+                colorEnPunto = getColorConAntialiasing(
+                        viewportSimple, escena, 
+                        cx, cy, muestrasParaAntialiasing);
                 imagenResultado.setColor(cx, cy, colorEnPunto);
             }
         }

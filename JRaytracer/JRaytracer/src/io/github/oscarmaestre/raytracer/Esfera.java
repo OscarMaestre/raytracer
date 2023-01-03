@@ -77,15 +77,15 @@ public class Esfera extends ObjetoRenderizable {
         
         PuntoAlcanzadoPorRayo puntoAlcance=null;
         
-        Vec3 a_menos_c;
-        a_menos_c=Vec3.restarVectores(
+        Vector3D a_menos_c;
+        a_menos_c=Vector3D.restarVectores(
                 rayo.getOrigen(), this.centro);
         
-        double a=Vec3.productoEscalar(
+        double a=Vector3D.productoEscalar(
                 rayo.getDireccion(), rayo.getDireccion());
-        double b=2.0 * (Vec3.productoEscalar(
+        double b=2.0 * (Vector3D.productoEscalar(
                 a_menos_c, rayo.getDireccion()));
-        double c=Vec3.productoEscalar(a_menos_c, a_menos_c) - 
+        double c=Vector3D.productoEscalar(a_menos_c, a_menos_c) - 
                 (this.radio * this.radio);
         double discriminante = (double) (b*b)-(4.0*a*c);
         
@@ -103,7 +103,7 @@ public class Esfera extends ObjetoRenderizable {
             PuntoAlcanzadoPorRayo puntoEsfera){
         double t = puntoEsfera.getT();
         Punto3D posicion = rayo.getPosicion(t);
-        Vec3 vectorUnitarioNormal = puntoEsfera.vectorUnitarioNormal();
+        Vector3D vectorUnitarioNormal = puntoEsfera.vectorUnitarioNormal();
         double r = (1+ vectorUnitarioNormal.getV1() )  * 0.5;
         double g = (1+ vectorUnitarioNormal.getV2() )  * 0.5;
         double b = (1+ vectorUnitarioNormal.getV3() )  * 0.5;

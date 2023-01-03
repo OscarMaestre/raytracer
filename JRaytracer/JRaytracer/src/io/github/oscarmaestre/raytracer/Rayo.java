@@ -10,17 +10,17 @@ package io.github.oscarmaestre.raytracer;
  */
 public class Rayo {
     private Punto3D origen;
-    private Vec3    direccion;
+    private Vector3D    direccion;
 
-    public Rayo(Punto3D origen, Vec3 direccion) {
+    public Rayo(Punto3D origen, Vector3D direccion) {
         this.origen = origen.getCopia();
         this.direccion = direccion.getCopia();
     }
     public Punto3D getPosicion(double t){
-        Vec3 incremento=Vec3.multiplicarVectorPorEscalar(direccion, t);
-        /* Pequeño hack: Vec3 y Punto3D son casi iguales, así que
-        posFinal puede ser Vec3*/
-        Vec3 posFinal = Vec3.sumarVectores(this.origen, incremento);
+        Vector3D incremento=Vector3D.multiplicarVectorPorEscalar(direccion, t);
+        /* Pequeño hack: Vector3D y Punto3D son casi iguales, así que
+        posFinal puede ser Vector3D*/
+        Vector3D posFinal = Vector3D.sumarVectores(this.origen, incremento);
         /* Pero por supuesto, devolvemos el tipo correcto*/
         return Punto3D.fromVec3(posFinal);
     }
@@ -29,7 +29,7 @@ public class Rayo {
         return origen;
     }
 
-    public Vec3 getDireccion() {
+    public Vector3D getDireccion() {
         return direccion;
     }
 

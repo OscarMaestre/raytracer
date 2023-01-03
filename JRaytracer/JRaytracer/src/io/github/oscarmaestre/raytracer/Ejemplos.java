@@ -23,10 +23,9 @@ public class Ejemplos {
         la imagen. Ese "incremento de blanco, será lo que iremos sumando
         en cada fila*/
         Color incremento;
-        incremento=Color.from(Color.dividirVectorPorEscalar(
-                Color.getBlanco(), (double)altoPx));
+        incremento=(Color) Color.getBlanco().dividirPorEscalar(altoPx);
         for (int cy=0; cy<altoPx; cy++){
-            base=Color.sumar(base, incremento);
+            base = (Color) base.sumar(incremento);
             for (int cx=0; cx<anchoPx; cx++){
                 Rayo rayoHacia = viewportSimple.getRayoHacia(cx, cy);
                 imagen.setColor(cx, cy, base);

@@ -7,8 +7,8 @@ public class Camara {
     private final int anchoPixelesReales;
     private final int altoPixelesReales;
     
-    private final Vec3 vectorAncho;
-    private final Vec3 vectorAlto;
+    private final Vector3D vectorAncho;
+    private final Vector3D vectorAlto;
     /* Origen de los ejes de coordenadas*/
     private Punto3D esquinaInferiorIzquierda;
     /* Este punto suele ser el (0, 0, 0)*/
@@ -26,28 +26,28 @@ public class Camara {
         this.distanciaFocal     = distanciaFocal;
         
         
-        this.vectorAncho        =new Vec3(this.anchoVirtual, 0.0, 0.0);
-        this.vectorAlto         =new Vec3(0.0, this.altoVirtual, 0.0);
+        this.vectorAncho        =new Vector3D(this.anchoVirtual, 0.0, 0.0);
+        this.vectorAlto         =new Vector3D(0.0, this.altoVirtual, 0.0);
         
         this.calcularEsquinaInferiorIzquierda();
     }
     private void calcularEsquinaInferiorIzquierda(){
         /* Calculamos la mitad de los vectores
         de ancho y alto  */
-        Vec3 semiVertical = 
-                Vec3.dividirVectorPorEscalar(this.vectorAlto, 2);
-        Vec3 semiHorizontal = 
-                Vec3.dividirVectorPorEscalar(this.vectorAncho, 2);
-        Vec3 profundidad = new Vec3(0, 0, distanciaFocal);
+        Vector3D semiVertical = 
+                Vector3D.dividirVectorPorEscalar(this.vectorAlto, 2);
+        Vector3D semiHorizontal = 
+                Vector3D.dividirVectorPorEscalar(this.vectorAncho, 2);
+        Vector3D profundidad = new Vector3D(0, 0, distanciaFocal);
         /* Y ahora al origen le restamos la semihorizontal,
         la semivertical y toda la profundidad (lo que hace 
         "retroceder" desde la pantalla*/
-        Vec3 resultadoParcial1 = 
-                Vec3.restarVectores(this.origenRayos, semiHorizontal);
-        Vec3 resultadoParcial2 = 
-                Vec3.restarVectores(resultadoParcial1, semiVertical);
-        Vec3 esquinaInfIzq = 
-                Vec3.restarVectores(resultadoParcial2, profundidad);
+        Vector3D resultadoParcial1 = 
+                Vector3D.restarVectores(this.origenRayos, semiHorizontal);
+        Vector3D resultadoParcial2 = 
+                Vector3D.restarVectores(resultadoParcial1, semiVertical);
+        Vector3D esquinaInfIzq = 
+                Vector3D.restarVectores(resultadoParcial2, profundidad);
         this.esquinaInferiorIzquierda =  Punto3D.fromVec3(esquinaInfIzq);
     }
     
@@ -73,17 +73,18 @@ public class Camara {
     public Rayo getRayoHacia(int cx, int cy){
         double escalaX=(double)cx/(this.anchoPixelesReales-1);
         double escalaY=(double)cy/(this.altoPixelesReales-1);
-        Vec3 desplazamientoX = 
-                Vec3.multiplicarVectorPorEscalar(
+        Vector3D desplazamientoX = 
+                Vector3D.multiplicarVectorPorEscalar(
                         this.vectorAncho, escalaX);
-        Vec3 desplazamientoY = 
-                Vec3.multiplicarVectorPorEscalar(
+        Vector3D desplazamientoY = 
+                Vector3D.multiplicarVectorPorEscalar(
                         this.vectorAlto, escalaY);
-        Vec3 desplazamientoZ=this.origenRayos.getCopia();
+        Vector3D desplazamientoZ=this.origenRayos.getCopia();
         /* Z se invierte porque el Z positivo está
         "alejándonos de la pantalla */
-        desplazamientoZ.cambiarSigno();
-        Vec3 direccion = Vec3.sumarVectores(this.esquinaInferiorIzquierda, 
+        desplazamientoZ = Vector3D.cambiarSigno(desplazamientoZ);
+        
+        Vector3D direccion = Vector3D.sumarVectores(this.esquinaInferiorIzquierda, 
                 desplazamientoX,
                 desplazamientoY,
                 desplazamientoZ);
@@ -104,15 +105,15 @@ public class Camara {
         return altoPixelesReales;
     }
     
-    public Vec3 getVectorHorizontal(){
-         return new Vec3(this.anchoVirtual, 0.0, 0.0);
+    public Vector3D getVectorHorizontal(){
+         return new Vector3D(this.anchoVirtual, 0.0, 0.0);
     }
-    public Vec3 getVectorVertical(){
-         return new Vec3(0.0, this.altoVirtual, 0.0);
+    public Vector3D getVectorVertical(){
+         return new Vector3D(0.0, this.altoVirtual, 0.0);
     }
     
-    public Vec3 getVectorProfundiad(){
-         return new Vec3(0.0, 0.0, this.distanciaFocal);
+    public Vector3D getVectorProfundiad(){
+         return new Vector3D(0.0, 0.0, this.distanciaFocal);
     }
     
     

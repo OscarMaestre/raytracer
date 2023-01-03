@@ -8,6 +8,7 @@ import io.github.oscarmaestre.raytracer.Color;
 import io.github.oscarmaestre.raytracer.Ejemplos;
 import io.github.oscarmaestre.raytracer.Imagen;
 import java.io.FileNotFoundException;
+import java.util.Random;
 import static org.testng.Assert.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -53,7 +54,7 @@ public class TestImagenes {
     }
     @Test
     public void imagen4() throws FileNotFoundException {
-        Imagen i=Imagen.getCuartaImagen(true, 0);
+        Imagen i=Imagen.getCuartaImagen(true, 100);
         i.guardarImagenComoPPM("cuarta_imagen.ppm");
     }
 

@@ -1,19 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package io.github.oscarmaestre.raytracer;
 
-/**
- *
- * @author usuario
- */
-public class Color extends Vec3 {
+public class Color implements IVec3 {
+    public static final Color NEGRO     =new Color(0,0,0);
+    public static final Color BLANCO    =new Color(255,255,255);
+    
+    public static final Color ROJO      =new Color(255,0,0);
+    public static final Color VERDE     =new Color(0,255,0);
+    public static final Color AZUL      =new Color(0,0,255);
+    
+    private double d1, d2, d3;
 
     public Color(double d1, double d2, double d3) {
-        super(d1, d2, d3);
+        this.d1 = d1;
+        this.d2 = d2;
+        this.d3 = d3;
     }
     
+    
+    
+    public boolean esNegro(){
+        boolean esNegro=this.sonIguales(this, Color.NEGRO);
+        return esNegro;
+    }
     public static Color getRojo(){
         return new Color(1.0, 0.0, 0.0);
     }
@@ -51,29 +59,12 @@ public class Color extends Vec3 {
         return cadena;
     }
     
-    public static Color from(Vec3 v){
+    public static Color from(IVec3 v){
         double d1 = v.getV1();
         double d2 = v.getV2();
         double d3 = v.getV3();
         Color c=new Color(d1, d2, d2);
         return new Color(d1, d2, d3);
-    }
-    
-    public static Color sumar(Color c1, Color c2){
-        Vec3 suma = Vec3.sumarVectores(c1, c2);
-        double r=suma.getV1();
-        double g=suma.getV2();
-        double b=suma.getV3();
-        if (r>1.0){
-            r=1.0;
-        }
-        if (g>1.0){
-            g=1.0;
-        }
-        if (b>1.0){
-            b=1.0;
-        }
-        return new Color(r, g, b);       
     }
     
     public double limitarRango(
@@ -83,4 +74,24 @@ public class Color extends Vec3 {
         if (valor>max_aceptado) return max_aceptado;
         return valor;
     } //Fin de limitarRango
+
+    @Override
+    public IVec3 from(double d1, double d2, double d3) {
+        return new Color(d1, d2, d3);
+    }
+
+    @Override
+    public double getV1() {
+        return this.d1;
+    }
+
+    @Override
+    public double getV2() {
+        return this.d2;
+    }
+
+    @Override
+    public double getV3() {
+        return this.d3;
+    }
 }
