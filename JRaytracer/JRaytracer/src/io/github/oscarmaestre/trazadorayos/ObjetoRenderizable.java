@@ -2,11 +2,16 @@ package io.github.oscarmaestre.trazadorayos;
 
 public abstract class ObjetoRenderizable {
     protected Vec3 color;
+    protected Material material;
     public  abstract RegistroAlcance esAlcanzadaPorRayo(
             Rayo rayo, double t_minimo, double t_maximo);
 
     public Vec3 getColor() {
         return color;
+    }
+
+    public Material getMaterial() {
+        return material;
     }
     
     public boolean rayoGolpeaPorElExterior(Rayo r, Vec3 normal){

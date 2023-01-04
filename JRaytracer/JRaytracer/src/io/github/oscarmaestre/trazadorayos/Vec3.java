@@ -65,6 +65,17 @@ public class Vec3 {
         return Math.sqrt(getLongitudCuadrado());
     }
     
+    public boolean esCasiCero(){
+        double delta=1e-8;
+        boolean xCasiCero=this.getX()<delta;
+        boolean yCasiCero=this.getY()<delta;
+        boolean zCasiCero=this.getZ()<delta;
+        boolean todosCasiCero=xCasiCero && yCasiCero && zCasiCero;
+        if (todosCasiCero){
+            return true;
+        } 
+        return false;
+    }
     /* Funciones de utilidad*/
     public String toString(){
         StringBuilder sb=new StringBuilder();
@@ -170,6 +181,18 @@ public class Vec3 {
         Vec3 puntoAlAzar=Vec3.getPuntoEnEsferaUnidad();
         return Vec3.vectorUnitario(puntoAlAzar);
     }
+    public static Vec3 getEsferaNormalSegunHemisferio(Vec3 normal){
+        Vec3 puntoEnEsferaUnidad = Vec3.getPuntoEnEsferaUnidad();
+        double productoEscalar;
+        productoEscalar = Vec3.productoEscalar(puntoEnEsferaUnidad, normal);
+        if (productoEscalar>0.0){
+            return puntoEnEsferaUnidad;
+        } else {
+            puntoEnEsferaUnidad.cambiarSigno();  
+        }   
+        return puntoEnEsferaUnidad;
+    }
+    
     public static double limitar(double valor, double min, double max){
         if (valor<min){
             return min;
@@ -191,5 +214,12 @@ public class Vec3 {
         g=limitar(g, 0, 0.999);
         b=limitar(b, 0, 0.999);
         return new Vec3(r, g, b);
+    }
+    public static Vec3 getReflejo(Vec3 v, Vec3 normal){
+        double producto = Vec3.productoEscalar(v, normal);
+        producto=(double)(producto*2.0);
+        Vec3 aux = Vec3.multiplicarPorDouble(normal, producto);
+        Vec3 reflejo=Vec3.restarVectores(v, aux);
+        return reflejo;
     }
 }

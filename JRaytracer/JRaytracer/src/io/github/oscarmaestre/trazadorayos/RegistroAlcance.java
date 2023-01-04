@@ -6,7 +6,7 @@ public class RegistroAlcance {
     private final double t;
     private final ObjetoRenderizable objeto;
     private boolean alcanzadoDesdeExterior;
-
+    
     public RegistroAlcance(Vec3 punto, Vec3 normal, double t, ObjetoRenderizable objeto, boolean alcanzadoDesdeExterior) {
         this.punto = punto;
         this.normal = normal;

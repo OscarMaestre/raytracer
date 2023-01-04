@@ -81,11 +81,20 @@ public class Imagen1 {
         
         final int ANCHO =400;
         final int ALTO  =225;
+
+        Material materialSuelo, materialCentro, materialIzq, materialDer;
+        materialSuelo=new MaterialLambertiano(new Vec3(0.8, 0.8, 0.0));
+        materialCentro=new MaterialLambertiano(new Vec3(0.7, 0.3, 0.3));
+        materialIzq=new MaterialMetalico(new Vec3(0.8, 0.8, 0.8));
+        materialDer=new MaterialMetalico(new Vec3(0.8, 0.6, 0.2));
         
         Escena escena=new Escena();
         Camara camara = Camara.getCamara();
-        escena.addEsfera(0.0, 0.0, -1, 0.5, new Vec3 (0.8, 0.8, 0.8));
-        escena.addEsfera(0.0, -100.5, -1.0, 100.0, new Vec3(0.2, 0.9, 0.1));
+        escena.addEsfera(0.0, 0.0, -1, 0.5, new Vec3 (0.8, 0.8, 0.8), materialCentro);
+        escena.addEsfera(1.0, 0.0, -1, 0.5, new Vec3 (0.8, 0.8, 0.8), materialIzq);
+        escena.addEsfera(-1.0, 0.0, -1, 0.5, new Vec3 (0.8, 0.8, 0.8), materialDer);
+        //escena.addEsfera(0.0, 1.0, -1, 0.5, new Vec3 (0.8, 0.8, 0.8));
+        escena.addEsfera(0.0, -100.5, -1.0, 100.0, new Vec3(0.2, 0.9, 0.1), materialSuelo);
         Imagen1 imagen=new Imagen1(ANCHO, ALTO);
         
         for (int coorY=0; coorY<ALTO; coorY++){
@@ -148,11 +157,42 @@ public class Imagen1 {
         registroAlcance=escena.rayoGolpeaObjeto(rayo, 0, Double.MAX_VALUE);
         
         if (registroAlcance!=null){
+            Material material=registroAlcance.getObjeto().getMaterial();
+            RayoReflejado rayoReflejado = material.dispersar(rayo, registroAlcance);
+            if (rayoReflejado==null) {
+                return new Vec3(0, 0, 0);
+            }
+            /* Si llegamos aquí hay reflejo, seguimos calculando
+            recursivamente */
+            Vec3 siguienteReflejo=getColor(rayoReflejado, escena, profundidad-1);
+            Vec3 atenuacion=rayoReflejado.getAtenuacion();
+            Vec3 colorFinal = Vec3.multiplicarVectores(atenuacion, siguienteReflejo);
+            return colorFinal;
+        } 
+        Vec3 direccionUnidad = Vec3.vectorUnitario(rayo.getDireccion());
+        double t=(direccionUnidad.getY()+1.0) * 0.5;
+        blanco.producto((double)(1.0-t));
+        Vec3 colorFondo=new Vec3(0.5, 0.7, 1.0);
+        colorFondo.producto(t);
+        Vec3 fondoMezclado = Vec3.sumarVectores(blanco, colorFondo);
+        return fondoMezclado;
+    }
+    
+    private static Vec3 getColorSinDispersion(Rayo rayo, Escena escena, int profundidad) {
+        /* Si hemos bajado demasiado en la recursividad salimos */
+        if (profundidad<=0){
+            return new Vec3(0, 0, 0);
+        }
+        RegistroAlcance registroAlcance;
+        Vec3 blanco=new Vec3(1, 1, 1);
+        registroAlcance=escena.rayoGolpeaObjeto(rayo, 0, Double.MAX_VALUE);
+        
+        if (registroAlcance!=null){
             Vec3 puntoAlQueDesviamos;
             puntoAlQueDesviamos=Vec3.sumarVectores(
                     registroAlcance.getPunto(), 
                     registroAlcance.getNormal(),
-                    Vec3.getVectorUnitarioAleatorio());
+                    Vec3.getEsferaNormalSegunHemisferio(registroAlcance.getNormal()));
             Vec3 nuevaDireccionDelRayo=
                     Vec3.restarVectores(puntoAlQueDesviamos, 
                             registroAlcance.getPunto());

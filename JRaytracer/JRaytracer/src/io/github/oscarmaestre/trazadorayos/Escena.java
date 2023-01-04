@@ -12,9 +12,9 @@ public class Escena {
     public void add(ObjetoRenderizable objeto){
         this.objetos.add(objeto);
     }
-    public void addEsfera(double x, double y, double z, double radio, Vec3 color){
+    public void addEsfera(double x, double y, double z, double radio, Vec3 color, Material material){
         Vec3 centroEsfera=new Vec3(x, y, z);
-        Esfera esfera=new Esfera(centroEsfera, radio, color);
+        Esfera esfera=new Esfera(centroEsfera, radio, color, material);
         this.add(esfera);
     }
     public RegistroAlcance rayoGolpeaObjeto(Rayo rayo, double t_min, double t_max){

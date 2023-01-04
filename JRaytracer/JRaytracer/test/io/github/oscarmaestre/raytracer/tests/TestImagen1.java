@@ -49,7 +49,7 @@ public class TestImagen1 {
     public void pruebaNormal(){
         Vec3 origen=new Vec3(0,0,0);
         double radio=1.0;
-        Esfera e=new Esfera(origen, radio, new Vec3(0, 1, 0));
+        Esfera e=new Esfera(origen, radio, new Vec3(0, 1, 0), null);
         Vec3 normalEnPunto = e.getNormalEnPunto(new Vec3(1, 1, 1));
         System.out.println("La normal es:"+normalEnPunto.toString());
     }
