@@ -24,21 +24,25 @@ class Imagen(object):
                 self.set_color(cx, cy, color)
     
     def set_color(self, cx, cy, color):
+        """Cambia el color de un pixel"""
         if cx<0 or cx>=self.ancho:
             raise Exception()
         if cy<0 or cy>=self.alto:
             raise Exception()
+        """Nuestro origen de coordenadas está abajo
+        por eso hacemos self.alto-cy-y"""
         self.puntos[self.alto-cy-1][cx]=color
             
     def get_puntos_rgb(self):
-        cadena=[]
         """Para cada pixel (x, y) se ejecutará una funcion f(x, y)
         que procese ambos pixeles"""
+        cadena=[]
         for cy in range(0, self.alto):
             for cx in range(0, self.ancho):
                 cadena.append(self.puntos[cy][cx].get_rgb())
         return "\n".join(cadena)
     def get_ppm(self):
+        """Devuelve los puntos en formato PPM"""
         archivo_ppm=[]
         archivo_ppm.append("P3")
         archivo_ppm.append("{0} {1}".format(self.ancho, self.alto))
@@ -47,16 +51,21 @@ class Imagen(object):
         return "\n".join(archivo_ppm)
     
     def guardar_imagen(self, nombre_archivo):
+        """Guarda la imagen actual en un archivo PPM"""
         with open(nombre_archivo, "w") as fich:
             fich.write(self.get_ppm())
 
 def imprimir_coordenadas(x, y, imagen):
+    """Funcion usada solo en las pruebas para probar
+    el recorrido de la imagen"""
     formato="<{0},{1}>".format(x, y)
     print(formato)
 
 def generar_gradiente(x, y, imagen):
-    rojo  = y / (imagen.alto-1)
-    verde = x/(imagen.ancho-1)
+    """Función usada solo en las pruebas para
+    probar la generación de archivos PPM"""
+    rojo  = x/(imagen.ancho-1)
+    verde = y / (imagen.alto-1)
     azul  = 0.5
     color = Vec3.Vec3(rojo, verde, azul)
     return color

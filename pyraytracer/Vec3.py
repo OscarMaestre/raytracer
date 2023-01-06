@@ -32,7 +32,7 @@ class Vec3(object):
     
     def get_longitud(self):
         """Devuelve la longitud del vector"""
-        longitud_cuadrado=self.get_longitud_cuadrado
+        longitud_cuadrado=self.get_longitud_cuadrado()
         return math.sqrt(longitud_cuadrado)
     
     def get_rgb(self):
@@ -91,6 +91,34 @@ def dividir_por_escalar(v, t):
     resultado=multiplicar_por_escalar(v, 1/t)
     return resultado
 
+def producto_simple(v1, v2):
+    """Producto simple de los componentes"""
+    nuevo_x = v1.x * v2.x
+    nuevo_y = v1.y * v2.y
+    nuevo_z = v1.z * v2.z
+    return Vec3(nuevo_x, nuevo_y, nuevo_z)
+
+def producto_escalar(v1, v2):
+    """Producto escalar de los vectores"""
+    suma_x    = v1.x * v2.x
+    suma_y    = v1.y * v2.y
+    suma_z    = v1.z * v2.z
+    resultado = suma_x + suma_y + suma_z
+    return resultado
+
+def producto_vectorial(v1, v2):
+    """Producto escalar de los vectores"""
+    
+    nuevo_x = (v1.y * v2.z) - (v1.z * v2.y)
+    nuevo_y = (v1.z * v2.x) - (v1.x * v2.z)
+    nuevo_z = (v1.x * v2.y) - (v1.y * v2.x)
+    return Vec3(nuevo_x, nuevo_y, nuevo_z)
+    
+def vector_unitario(vector):
+    """Devuelve el vector unitario correspondiente"""
+    longitud  = vector.get_longitud()
+    resultado = dividir_por_escalar(vector, longitud)
+    return resultado
 
 class TestVectores(unittest.TestCase):
     def test_creacion(self):
@@ -133,10 +161,42 @@ class TestVectores(unittest.TestCase):
         v1=Vec3(2.0, 4.0, -5.0)
         longitud=v1.get_longitud_cuadrado()
         self.assertEqual(longitud, 45)
+    
     def test_rgb(self):
         azul=Vec3.get_azul()
         rgb=azul.get_rgb()
         self.assertEqual("0 0 255", rgb)
+    
+    def test_producto_simple(self):
+        v1=Vec3(2.0, 4.0, -5.0)
+        v2=Vec3(1.5, 0.6, -2)
+        resultado=producto_simple(v1, v2)
+        self.assertEqual(3.0, resultado._x)
+        self.assertEqual(2.4, resultado._y)
+        self.assertEqual(10, resultado._z)
+
+    def test_producto_escalar(self):
+        v1=Vec3(2.0, 4.0, -5.0)
+        v2=Vec3(1.5, 0.6, -2)
+        resultado_esperado = 3+2.4+10
+        resultado_obtenido = producto_escalar(v1, v2)
+        self.assertEqual(resultado_esperado, resultado_obtenido)
+
+    def test_producto_vectorial(self):
+        v1=Vec3(1, 2, 3)
+        v2=Vec3(2.5, 3.5, -4.5)
+        resultado=producto_vectorial(v1, v2)
+        self.assertEqual(-19.5, resultado._x)
+        self.assertEqual(12, resultado._y)
+        self.assertEqual(-1.5, resultado._z)
+
+    def test_producto_unitario(self):
+        v1=Vec3(2, -1.5, 3.25)
+        resultado=vector_unitario(v1)
+        self.assertAlmostEqual(0.48777, resultado._x, places=5)
+        self.assertAlmostEqual(-0.36583, resultado._y, places=5)
+        self.assertAlmostEqual(0.79262, resultado._z, places=5)
+        
 
 if __name__=="__main__":
     unittest.main()
