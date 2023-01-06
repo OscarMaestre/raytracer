@@ -1,5 +1,6 @@
 package io.github.oscarmaestre.raytracer.tests;
 
+import io.github.oscarmaestre.trazadorayos.Escena;
 import io.github.oscarmaestre.trazadorayos.Esfera;
 import io.github.oscarmaestre.trazadorayos.Imagen1;
 import io.github.oscarmaestre.trazadorayos.Vec3;
@@ -19,13 +20,27 @@ public class TestImagen1 {
     @Test
     public void testSinAA() throws FileNotFoundException {
         boolean conaa=false;
-        Imagen1 i = Imagen1.getPrimeraImagen(conaa);
+        long antes = System.currentTimeMillis();
+        Escena escena=Escena.getEscenaEjemploCamaraAerea();
+        Imagen1 i = Imagen1.renderizar(conaa, escena);
+        long despues = System.currentTimeMillis();
+        long diferencia=despues-antes;
+        System.out.println("Sin AA diferencia ms:"+diferencia);
+        double ms=(double) ((despues-antes)/1000.0);
+        System.out.println("Sin antialiasing:"+ms);
         i.guardarImagenComoPPM("otra1.ppm");
     }
     @Test
     public void testConAA() throws FileNotFoundException {
+        Escena escena=Escena.getEscenaEjemploCamaraAerea();
         boolean conaa=true;
-        Imagen1 i = Imagen1.getPrimeraImagen(conaa);
+        long antes = System.currentTimeMillis();
+        Imagen1 i = Imagen1.renderizar(conaa, escena);
+        long despues = System.currentTimeMillis();
+        long diferencia=despues-antes;
+        System.out.println("Con AA diferencia ms:"+diferencia);
+        double ms=(double) ((despues-antes)/1000);
+        System.out.println("Con antialiasing:"+ms);
         i.guardarImagenComoPPM("otra1-conAA.ppm");
     }
     @Test
@@ -49,7 +64,7 @@ public class TestImagen1 {
     public void pruebaNormal(){
         Vec3 origen=new Vec3(0,0,0);
         double radio=1.0;
-        Esfera e=new Esfera(origen, radio, new Vec3(0, 1, 0), null);
+        Esfera e=new Esfera(origen, radio, null);
         Vec3 normalEnPunto = e.getNormalEnPunto(new Vec3(1, 1, 1));
         System.out.println("La normal es:"+normalEnPunto.toString());
     }

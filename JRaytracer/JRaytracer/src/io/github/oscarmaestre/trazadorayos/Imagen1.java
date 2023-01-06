@@ -77,24 +77,16 @@ public class Imagen1 {
                 (coordenadaDouble+variacionAleatoria)/valorMaximoAjustado;
         return escalarPerturbado;
     }
-    public static Imagen1 getPrimeraImagen(boolean conAA){
+    public static Imagen1 renderizar(boolean conAA, Escena escena){
         
         final int ANCHO =400;
         final int ALTO  =225;
 
-        Material materialSuelo, materialCentro, materialIzq, materialDer;
-        materialSuelo=new MaterialLambertiano(new Vec3(0.8, 0.8, 0.0));
-        materialCentro=new MaterialLambertiano(new Vec3(0.7, 0.3, 0.3));
-        materialIzq=new MaterialMetalico(new Vec3(0.8, 0.8, 0.8));
-        materialDer=new MaterialMetalico(new Vec3(0.8, 0.6, 0.2));
         
-        Escena escena=new Escena();
+        
         Camara camara = Camara.getCamara();
-        escena.addEsfera(0.0, 0.0, -1, 0.5, new Vec3 (0.8, 0.8, 0.8), materialCentro);
-        escena.addEsfera(1.0, 0.0, -1, 0.5, new Vec3 (0.8, 0.8, 0.8), materialIzq);
-        escena.addEsfera(-1.0, 0.0, -1, 0.5, new Vec3 (0.8, 0.8, 0.8), materialDer);
-        //escena.addEsfera(0.0, 1.0, -1, 0.5, new Vec3 (0.8, 0.8, 0.8));
-        escena.addEsfera(0.0, -100.5, -1.0, 100.0, new Vec3(0.2, 0.9, 0.1), materialSuelo);
+        
+        double R=Math.cos(Math.PI/4);
         Imagen1 imagen=new Imagen1(ANCHO, ALTO);
         
         for (int coorY=0; coorY<ALTO; coorY++){

@@ -222,4 +222,21 @@ public class Vec3 {
         Vec3 reflejo=Vec3.restarVectores(v, aux);
         return reflejo;
     }
+    public static Vec3 getRojo(){
+        return new Vec3(1.0, 0, 0);
+    }
+    public static Vec3 getVerde(){
+        return new Vec3(0.0, 1.0, 0);
+    }
+    public static Vec3 getAzul(){
+        return new Vec3(0.0, 0, 1.0);
+    }
+    public static Vec3 getNegro(){
+        return new Vec3(0.0, 0, 0.0);
+    }
+    public static Vec3 getBlanco(){
+        return new Vec3(1.0, 1.0, 1.0);
+    }
+    
+    
 }

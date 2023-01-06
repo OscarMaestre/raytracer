@@ -7,10 +7,10 @@ public class Esfera extends ObjetoRenderizable {
     private final Vec3 centro;
     private final double  radio;
     
-    public Esfera(Vec3 centro, double radio, Vec3 color, Material material) {
+    public Esfera(Vec3 centro, double radio, Material material) {
         this.centro = centro;
         this.radio = radio;
-        this.color = color;
+        
         this.material=material;
     }
     
