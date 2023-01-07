@@ -1,6 +1,6 @@
 import unittest
 import math
-
+from random import random
 class Vec3(object):
     def __init__(self, x=0, y=0 , z=0) -> None:
         self._x=x
@@ -34,14 +34,43 @@ class Vec3(object):
         """Devuelve la longitud del vector"""
         longitud_cuadrado=self.get_longitud_cuadrado()
         return math.sqrt(longitud_cuadrado)
-    
+
+    def recortar(self, valor):
+        """Limita el valor a [0.0, 1.0] recortando si es necesario"""    
+        if valor<0:
+            return 0
+        if valor>=1.0:
+            return 1.0
+        return valor
+
     def get_rgb(self):
         """Devuelve el RGB correspondiente a este vector"""
-        rojo = int(self.x*255.999)
-        verde= int(self.y*255.999)
-        azul = int(self.z*255.999)
+        rojo = int(self.recortar(self.x)*255.999)
+        verde= int(self.recortar(self.y)*255.999)
+        azul = int(self.recortar(self.z)*255.999)
         formato="{0} {1} {2}".format(rojo, verde, azul)
         return formato
+
+    @staticmethod
+    def get_vector_azar():
+        """Genera un vector al azar con componentes entre -1 y 1"""
+        x=(2*random())-1
+        y=(2*random())-1
+        z=(2*random())-1
+        return Vec3(x, y, z)
+
+    @staticmethod
+    def get_vector_en_esfera_unidad():
+        """Genera vectores al azar hasta que uno está dentro
+        de la esfera de radio unidad"""
+        while True:
+            vector_azar=Vec3.get_vector_azar()
+            if vector_azar.get_longitud_cuadrado()<=1:
+                return vector_azar
+        #Fin del while
+    
+    @staticmethod
+
 
     @staticmethod
     def get_azul():
@@ -120,6 +149,13 @@ def vector_unitario(vector):
     resultado = dividir_por_escalar(vector, longitud)
     return resultado
 
+def vector_es_casi_cero(vector : Vec3):
+    x_es_casi_cero=(vector.x<1e-8)
+    y_es_casi_cero=(vector.y<1e-8)
+    z_es_casi_cero=(vector.z<1e-8)
+    casi_todo_es_cero=x_es_casi_cero and y_es_casi_cero and z_es_casi_cero
+    return casi_todo_es_cero
+
 class TestVectores(unittest.TestCase):
     def test_creacion(self):
         v1=Vec3(2.0, 4.0, -5.0)
@@ -197,6 +233,16 @@ class TestVectores(unittest.TestCase):
         self.assertAlmostEqual(-0.36583, resultado._y, places=5)
         self.assertAlmostEqual(0.79262, resultado._z, places=5)
         
+    def test_vector_unitario_azar(self):
+        vector_unitario=Vec3.get_vector_en_esfera_unidad()
+        self.assertTrue(vector_unitario.get_longitud_cuadrado()<=1)
+
+    def test_vector_casi_cero(self):
+        v=Vec3(1e-10, 1e-10, 1e-10)
+        self.assertTrue(vector_es_casi_cero(v))
+
+        v=Vec3(1e-10, 1e-10, 2)
+        self.assertFalse(vector_es_casi_cero(v))
 
 if __name__=="__main__":
     unittest.main()
