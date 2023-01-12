@@ -1,9 +1,10 @@
 import unittest
 import Vec3
+import Rayo
 from rich.progress import track
 from Camara import Camara
 from Objeto import Escena
-from random import random
+from random import random, randint
 from Materiales import MaterialLambertiano
 
 class Imagen(object):
@@ -33,14 +34,15 @@ class Imagen(object):
 
     def perturbar_valor(self, coordenada, maximo):
         variacion=random()
-        coordenada_perturbada=int(coordenada+variacion)
+        coordenada_perturbada=coordenada + randint(0, 1)
         return coordenada_perturbada/(maximo-1)
 
-    def procesar_pixeles_con_aa(self, escena, funcion, num_muestras=100):
-        """Para cada pixel (x, y) se ejecutará una funcion f(rayo, escena)
+    def procesar_pixeles_con_aa(self, escena, funcion, num_muestras=30):
+        """Para cada pixel (x, y) se ejecutará una funcion f(rayo, escena, 100)
         que procese el pixel de esa imagen y devuelva el color
         que corresponda a ese pixel. Esta variante incluye el
-        antialiasing (suavizado de contornos)"""
+        antialiasing (suavizado de contornos) y una profundidad
+        maxima de rebote de 100"""
         camara=Camara()
         for cy in track(range(0, self.alto), "Generando imagen con AA..."):
             for cx in range(0, self.ancho):
@@ -50,7 +52,7 @@ class Imagen(object):
                     v=self.perturbar_valor(cy, self.alto)
                     
                     rayo=camara.get_rayo(u, v)
-                    color_punto=funcion(rayo, escena)
+                    color_punto=funcion(rayo, escena, 50)
                     color=Vec3.sumar_vectores(color, color_punto)
                 #El bucle AA ha terminado, dividimos
                 #el color por el número de muestras
@@ -106,11 +108,31 @@ def generar_gradiente(x, y, imagen):
     color = Vec3.Vec3(rojo, verde, azul)
     return color
 
+#Usado solo en las pruebas, no es realista
 def color_rayo(rayo, escena):
     registro_alcance=escena.es_alcanzado(rayo, 0.00001, 10000)
     if registro_alcance!=None:
         return Vec3.Vec3.get_blanco()
     return Vec3.Vec3.get_azul()
+
+def color_rayo_con_rebote(rayo, escena, profundidad):
+    if profundidad<=0:
+        return Vec3.Vec3.get_negro()
+    
+    registro_alcance=escena.es_alcanzado(rayo, 0.00001, 10000)
+    if registro_alcance!=None:
+        material=registro_alcance.material
+        rayo_reflejado=material.refleja_rayo(rayo, registro_alcance)
+        color_rayo=rayo_reflejado.color
+        color_siguiente_rebote=color_rayo_con_rebote(
+            rayo_reflejado, escena, profundidad-1)
+        color_final =Vec3.producto_simple(color_siguiente_rebote, color_rayo)
+        # print("Multiplicamos "+str(color_rayo) + " por " +str(color_siguiente_rebote)+
+        #     " y sale " + str(color_final))
+        # print("hubo alcance y el color es:"+color_final.get_rgb())
+        return color_final
+    return Vec3.Vec3.get_blanco()
+
 
 class TestImagen(unittest.TestCase):
     def test_creacion(self):
@@ -129,7 +151,7 @@ class TestImagen(unittest.TestCase):
         imagen.guardar_imagen("pixeles_variados.ppm")
     
     
-    def test_escena_esfera_roja(self):
+    def test_escena_esfera_simple(self):
         mat_lambert=MaterialLambertiano(Vec3.Vec3(0.5, 0.6, 0.9))
         imagen=Imagen(400, 225)
         escena=Escena()
@@ -138,15 +160,56 @@ class TestImagen(unittest.TestCase):
         imagen.procesar_pixeles(escena, color_rayo)
         imagen.guardar_imagen("esfera.ppm")
 
-    def test_escena_esfera_roja_con_aa(self):
-        mat_lambert=MaterialLambertiano(Vec3.Vec3(0.5, 0.6, 0.9))
+
+    def test_escena_esfera_con_material(self):
+        mat_lambert=MaterialLambertiano(Vec3.Vec3(0.30, 0.9, 0.9))
+        imagen=Imagen(400, 225)
+        escena=Escena()
+        centro_esfera=Vec3.Vec3(0, 0, -1)
+        escena.addEsfera(centro_esfera, 0.5, mat_lambert)
+        imagen.procesar_pixeles_con_aa(escena, color_rayo_con_rebote)
+        imagen.guardar_imagen("esfera_con_material.ppm")
+
+    def test_escena_esfera_con_material_aa(self):
+        mat_lambert=MaterialLambertiano(Vec3.Vec3(0.30, 0.9, 0.9))
+        imagen=Imagen(400, 225)
+        escena=Escena()
+        centro_esfera=Vec3.Vec3(0, 0, -1)
+        escena.addEsfera(centro_esfera, 0.5, mat_lambert)
+        imagen.procesar_pixeles_con_aa(escena, color_rayo_con_rebote)
+        imagen.guardar_imagen("esfera_con_material_aa.ppm")
+
+    def test_rayo_simple(self):
+        mat_lambert=MaterialLambertiano(Vec3.Vec3(0.30, 1.0, 0.9))
         imagen=Imagen(200, 112)
         escena=Escena()
         centro_esfera=Vec3.Vec3(0, 0, -1)
         escena.addEsfera(centro_esfera, 0.5, mat_lambert)
-        imagen.procesar_pixeles_con_aa(escena, color_rayo)
-        imagen.guardar_imagen("esfera_con_aa.ppm")
+        rayo=Rayo.Rayo(Vec3.Vec3(0, 0, 0), Vec3.Vec3(0, 0.1, -1))
+        rayo_reflejado=color_rayo_con_rebote(rayo, escena, 1)
+        print(rayo_reflejado.get_rgb())
+    def test_valor_perturbado(self):
+        imagen=Imagen(200, 112)
+        perturbado=imagen.perturbar_valor(199, 200)
+        self.assertEqual(20, perturbado)
+
+def generar_imagen_1():
+    
+    imagen=Imagen(400, 225)
+    
+    escena=Escena()
+    #Esfera 1
+    mat_lambert1=MaterialLambertiano(Vec3.Vec3(0.30, 0.9, 0.9))
+    centro_esfera=Vec3.Vec3(0, 0, -1)
+    escena.addEsfera(centro_esfera, 0.5, mat_lambert1)
+
+    mat_lambert2=MaterialLambertiano(Vec3.Vec3(0.1, 0.25, 0.15))
+    centro_esfera2=Vec3.Vec3(0, -100.5, -1)
+    escena.addEsfera(centro_esfera2, 100, mat_lambert2)
+    imagen.procesar_pixeles_con_aa(escena, color_rayo_con_rebote, num_muestras=20)
+    imagen.guardar_imagen("esferas_imagen_1.ppm")
 
 
 if __name__=="__main__":
-    unittest.main()
+    # unittest.main()
+    generar_imagen_1()

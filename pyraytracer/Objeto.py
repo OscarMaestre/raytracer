@@ -1,6 +1,8 @@
 import Vec3
 import math
 from RegistroAlcances import RegistroAlcances
+from Materiales import MaterialLambertiano
+import unittest
 
 class Objeto(object):
     def es_alcanzado(rayo, t_min, t_max, registro_alcance):
@@ -14,10 +16,17 @@ class Escena(object):
         self._objetos.append(esfera)
     
     def es_alcanzado(self, rayo, t_min, t_max):
+        mas_cercano_hasta_ahora=t_max
+        mejor_reg_alcance=None
         for objeto in self._objetos:
-            reg_alcance=objeto.es_alcanzado(rayo, t_min, t_max)
+            reg_alcance=objeto.es_alcanzado(rayo, t_min, mas_cercano_hasta_ahora)
             if reg_alcance!=None:
-                return reg_alcance
+                #print("Encontrado alcance")
+                mejor_reg_alcance=reg_alcance
+                mas_cercano_hasta_ahora=reg_alcance.t
+            #Fin del if
+        #Fin del for que recorre los objetos de la escena
+        return mejor_reg_alcance
     
 class Esfera(Objeto):
     def __init__(self, center, radio, material) -> None:
@@ -65,5 +74,19 @@ class Esfera(Objeto):
         #solución
         punto_alcance=rayo.punto_final(solucion)
         normal=self.get_normal_en_punto(punto_alcance)
-        registro_alcances=RegistroAlcances(punto_alcance, normal, solucion)
+        registro_alcances=RegistroAlcances(punto_alcance, normal, solucion, self._material)
         return registro_alcances
+
+class TestEsfera(unittest.TestCase):
+    def test_normal(self):
+        mat_lambert=MaterialLambertiano(Vec3.Vec3(0.5, 0.6, 0.9))
+        
+        centro_esfera=Vec3.Vec3(0, 0, -1)
+        e=Esfera(centro_esfera, 0.5, mat_lambert)
+        normal=e.get_normal_en_punto(Vec3.Vec3(0.1, 0.1, -1))
+        print("Normal"+str(normal))
+
+
+
+if __name__=="__main__":
+    unittest.main()

@@ -1,6 +1,7 @@
 import unittest
 import math
 from random import random
+
 class Vec3(object):
     def __init__(self, x=0, y=0 , z=0) -> None:
         self._x=x
@@ -50,6 +51,28 @@ class Vec3(object):
         azul = int(self.recortar(self.z)*255.999)
         formato="{0} {1} {2}".format(rojo, verde, azul)
         return formato
+    
+    def get_rgb_con_gamma_corregido(self):
+        """Devuelve el RGB correspondiente a este vector
+        pero con el gamma corregido"""
+        rojo  = math.sqrt(self.x)
+        verde = math.sqrt(self.x)
+        azul  = math.sqrt(self.x)
+
+        rojo  = self.recortar(rojo)  * 256
+        verde = self.recortar(verde) * 256
+        azul  = self.recortar(azul)  * 256
+
+        rojo  = int(rojo)
+        verde = int(verde)
+        azul  = int(azul)
+        
+        formato="{0} {1} {2}".format(rojo, verde, azul)
+        return formato
+
+    def __str__(self) -> str:
+        cadena="<{0}, {1}, {2}>".format(self.x, self.y, self.z)
+        return cadena
 
     @staticmethod
     def get_vector_azar():
@@ -70,7 +93,11 @@ class Vec3(object):
         #Fin del while
     
     @staticmethod
-
+    def get_vector_azar_en_hemisferio(normal):
+        vector_en_esfera=Vec3.get_vector_en_esfera_unidad()
+        if producto_escalar(vector_en_esfera, normal)>0.0:
+            return vector_en_esfera
+        return cambiar_signo(vector_en_esfera)
 
     @staticmethod
     def get_azul():
@@ -155,6 +182,10 @@ def vector_es_casi_cero(vector : Vec3):
     z_es_casi_cero=(vector.z<1e-8)
     casi_todo_es_cero=x_es_casi_cero and y_es_casi_cero and z_es_casi_cero
     return casi_todo_es_cero
+
+def apuntan_en_la_misma_direccion (v1 : Vec3, v2 : Vec3):
+    prod_escalar=producto_escalar(v1, v2)
+    return prod_escalar>0
 
 class TestVectores(unittest.TestCase):
     def test_creacion(self):
@@ -243,6 +274,12 @@ class TestVectores(unittest.TestCase):
 
         v=Vec3(1e-10, 1e-10, 2)
         self.assertFalse(vector_es_casi_cero(v))
+
+    def test_apuntan_misma_direccion(self):
+        v1=Vec3(1, 2, 3)
+        v2=Vec3(1, 2, -3)
+        debe_dar_falso=apuntan_en_la_misma_direccion(v1, v2)
+        self.assertEqual(debe_dar_falso, False)
 
 if __name__=="__main__":
     unittest.main()
